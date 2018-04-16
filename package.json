@@ -1,0 +1,22 @@
+{
+  "name": "phaser-racer",
+  "version": "1.0.0",
+  "description": "Ultimate racer game in phaser with phasers",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capAcade/phaser-racer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/capAcade/phaser-racer/issues"
+  },
+  "homepage": "https://github.com/capAcade/phaser-racer#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
