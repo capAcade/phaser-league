@@ -8,4 +8,4 @@ Prerequisites: Node version ???
 
 # Start
 1. `npm start`
-2. goto: [http://localhost:3000/](http://localhost:3000/){:target="_blank"}
+2. goto: [http://localhost:3000/](http://localhost:3000/)
