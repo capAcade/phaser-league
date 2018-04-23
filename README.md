@@ -9,3 +9,4 @@ Prerequisites: Node version ???
 
 # Start
 `npm start`
+goto: `http://localhost:3000/`
