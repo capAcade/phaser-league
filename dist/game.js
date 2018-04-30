@@ -3,7 +3,7 @@ var game = new Phaser.Game(1280, 839, Phaser.AUTO, 'main_game', { preload: prelo
 function preload() {
 	game.load.spritesheet('map','assets/map.jpg');
 	game.load.spritesheet('car','assets/car.png');
-	game.load.spritesheet('building','assets/building.png');
+	game.load.spritesheet('ball', 'assets/ball.jpg');
 	game.load.physics("collision","assets/collision.json");
 }
 
@@ -13,34 +13,35 @@ function create() {
 	
 	/*Enable Phyics Engine*/
 	game.physics.startSystem(Phaser.Physics.P2JS);
+
 	/*Adding Map*/
 	var map = game.add.sprite(0,0,'map');
+
 	/*Adding car*/
 	car = game.add.sprite(570,100,'car');
 	game.physics.p2.enable(car);
+	car.body.collideWorldBounds = true;
 	car.body.angle = 90;
-	
+
+    /*Adding Ball*/
+    var ball = game.add.sprite(640,420,'ball');
+    game.physics.p2.enable(ball);
+    ball.body.collideWorldBounds = true;
+
 	cursors = game.input.keyboard.createCursorKeys();
-	
-	/*Create Collision Groups*/
-	var carCollisionGroup = game.physics.p2.createCollisionGroup();
-	var buildingCollisionGroup = game.physics.p2.createCollisionGroup();
-	game.physics.p2.updateBoundsCollisionGroup();
-	
-	/*Adding Building*/
-	var building = game.add.sprite(640,420,'building');
-	game.physics.p2.enable(building);
-	building.body.kinematic = true; //Building is static
-	building.body.clearShapes(); //Remove standard Bounding Box
-	building.body.loadPolygon('collision','building'); //Load Bounding Box from Physics Editor File
-	
+
+    /*Create Collision Groups*/
+    var carCollisionGroup = game.physics.p2.createCollisionGroup();
+    var ballCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.physics.p2.updateBoundsCollisionGroup();
+
 	//Set Collision Groups
 	car.body.setCollisionGroup(carCollisionGroup);
-	building.body.setCollisionGroup(buildingCollisionGroup);
+	ball.body.setCollisionGroup(ballCollisionGroup);
 	
 	//Set Collision
-	car.body.collides([carCollisionGroup,buildingCollisionGroup]);
-	building.body.collides([buildingCollisionGroup,carCollisionGroup]);
+	car.body.collides([carCollisionGroup,ballCollisionGroup]);
+	ball.body.collides([ballCollisionGroup,carCollisionGroup]);
 }
 
 function update()
