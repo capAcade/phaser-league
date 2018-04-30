@@ -1,7 +1,7 @@
 {
-  "name": "phaser-racer",
+  "name": "phaser-league",
   "version": "1.0.0",
-  "description": "Ultimate racer game in phaser with phasers",
+  "description": "Ultimate car soccer league game in phaser with phasers",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

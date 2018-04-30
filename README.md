@@ -1,5 +1,5 @@
-# phaser-racer
-The ultimate racing game in phaser with phasers
+# phaser-league
+The ultimate car soccer league game in phaser with phasers
 
 # Setup
 Prerequisites: Node version ???
