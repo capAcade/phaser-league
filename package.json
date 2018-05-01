@@ -4,7 +4,7 @@
   "description": "Ultimate car soccer league game in phaser with phasers",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "start http://localhost:3000 && node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
