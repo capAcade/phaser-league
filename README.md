@@ -1,5 +1,5 @@
 # phaser-league
-The ultimate car soccer league game in phaser with phasers
+The ultimate car soccer league main in phaser with phasers
 
 # Setup
 Prerequisites: Node version ???
@@ -7,5 +7,4 @@ Prerequisites: Node version ???
 2. `npm i`
 
 # Start
-1. `npm start`
-2. goto: [http://localhost:3000/](http://localhost:3000/)
+1. `npm start` should open [http://localhost:3000/](http://localhost:3000/) in browser
