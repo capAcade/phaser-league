@@ -29,8 +29,6 @@ GameOver.prototype = {
     txt.events.onInputOut.add(onOut, this);
 
     this.optionCount ++;
-
-
   },
 
   create: function () {

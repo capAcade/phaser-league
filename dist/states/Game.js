@@ -4,39 +4,7 @@ Game.prototype = {
 
   preload: function () {
     this.optionCount = 1;
-    this.cursors;
     this.velocity = 0;
-  },
-
-  addMenuOption: function (text, callback) {
-    var optionStyle = {
-      font: '30pt TheMinion',
-      fill: 'white',
-      align: 'left',
-      stroke: 'rgba(0,0,0,0)',
-      srokeThickness: 4
-    };
-    var txt = game.add.text(game.world.centerX, (this.optionCount * 80) + 200, text, optionStyle);
-    txt.anchor.setTo(0.5);
-    txt.stroke = "rgba(0,0,0,0";
-    txt.strokeThickness = 4;
-    var onOver = function (target) {
-      target.fill = "#FEFFD5";
-      target.stroke = "rgba(200,200,200,0.5)";
-      txt.useHandCursor = true;
-    };
-    var onOut = function (target) {
-      target.fill = "white";
-      target.stroke = "rgba(0,0,0,0)";
-      txt.useHandCursor = false;
-    };
-    txt.useHandCursor = true;
-    txt.inputEnabled = true;
-    txt.events.onInputUp.add(callback, this);
-    txt.events.onInputOver.add(onOver, this);
-    txt.events.onInputOut.add(onOut, this);
-
-    this.optionCount++;
   },
 
   create: function () {
@@ -72,15 +40,35 @@ Game.prototype = {
     car.body.collides([carCollisionGroup, ballCollisionGroup]);
     ball.body.collides([ballCollisionGroup, carCollisionGroup]);
 
-    /*
-    this.addMenuOption('resume', function (e) {
-    // close menu
-    });
-    this.addMenuOption('Exit', function (e) {
-    // change state to game menu
-    this.game.state.start("GameMenu");
-    });
-    */
+    /* Pause Menu */
+    menuKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    menuKey.onDown.add(togglePause, self);
+
+    function togglePause(event) {
+      if (game.paused) {
+        // Check if the click was inside the menu
+        if (event) {
+          console.log(event);
+
+        } else {
+          menuGroup.destroy();
+          game.paused = false;
+        }
+      } else {
+        game.paused = true;
+
+        menuGroup = game.add.group();
+
+        pauseText = game.add.text(game.world.centerX, game.world.centerY - 100, "Game Paused", { font: "65px Arial", fill: "#f0f", align: "center" }, menuGroup);
+        pauseText.anchor.setTo(0.5, 0.5);
+        
+        resumeText = game.add.text(game.world.centerX, game.world.centerY, "Resume", { font: "45px Arial", fill: "#f0f", align: "center" }, menuGroup);
+        resumeText.anchor.setTo(0.5, 0.5);
+
+        exitText = game.add.text(game.world.centerX, game.world.centerY + 75, "Main Menu", { font: "45px Arial", fill: "#f0f", align: "center" }, menuGroup);
+        exitText.anchor.setTo(0.5, 0.5);
+      } 
+    }
   },
 
   update: function () {
@@ -107,7 +95,7 @@ Game.prototype = {
             this.velocity-=9;
         } else {
           // decelerate (friction)
-          velocity+=6
+          this.velocity+=6
         }
     } else if (this.velocity == 0) {
       if (this.cursors.up.isDown) {
@@ -144,5 +132,5 @@ Game.prototype = {
     } else {
       car.body.angularVelocity = 0;
     }
-  }
+  },
 };
