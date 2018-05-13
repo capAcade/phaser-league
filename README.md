@@ -7,4 +7,4 @@ Prerequisites: Node version ???
 2. `npm i`
 
 # Start
-1. `npm start` should open [http://localhost:3000/](http://localhost:3000/) in browser
+1. `npm start` starts server and also opens [http://localhost:3000/](http://localhost:3000/) in browser
