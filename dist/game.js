@@ -1,20 +1,30 @@
-var game = new Phaser.Game(1280, 839, Phaser.AUTO, 'main_game', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(1280, 1024, Phaser.AUTO, 'main_game', { preload: preload, create: create, update: update });
 
 function preload() {
-	game.load.spritesheet('map','assets/map.jpg');
 	game.load.spritesheet('car','assets/car.png');
-	game.load.spritesheet('building','assets/building.png');
-	game.load.physics("collision","assets/collision.json");
+
+	game.load.tilemap('map2', 'assets/phaserleage_tiledmap_arena1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles2', 'assets/set.gif');
 }
 
+var map2;
 var cursors;
 var velocity = 0;
+var layer2;
+var car;
+
 function create() {
 	
 	/*Enable Phyics Engine*/
 	game.physics.startSystem(Phaser.Physics.P2JS);
 	/*Adding Map*/
-	var map = game.add.sprite(0,0,'map');
+	map2 = game.add.tilemap('map2');
+	map2.addTilesetImage('Arena1', 'tiles2');
+	map2.setCollisionBetween(0,218);
+	map2.setCollisionBetween(220,323);
+	layer2 = map2.createLayer(0);
+	layer2.resizeWorld();
+
 	/*Adding car*/
 	car = game.add.sprite(570,100,'car');
 	game.physics.p2.enable(car);
@@ -27,24 +37,18 @@ function create() {
 	var buildingCollisionGroup = game.physics.p2.createCollisionGroup();
 	game.physics.p2.updateBoundsCollisionGroup();
 	
-	/*Adding Building*/
-	var building = game.add.sprite(640,420,'building');
-	game.physics.p2.enable(building);
-	building.body.kinematic = true; //Building is static
-	building.body.clearShapes(); //Remove standard Bounding Box
-	building.body.loadPolygon('collision','building'); //Load Bounding Box from Physics Editor File
-	
 	//Set Collision Groups
 	car.body.setCollisionGroup(carCollisionGroup);
-	building.body.setCollisionGroup(buildingCollisionGroup);
+	//building.body.setCollisionGroup(buildingCollisionGroup);
 	
 	//Set Collision
 	car.body.collides([carCollisionGroup,buildingCollisionGroup]);
-	building.body.collides([buildingCollisionGroup,carCollisionGroup]);
+	//building.body.collides([buildingCollisionGroup,carCollisionGroup]);
 }
 
 function update()
 {
+
 	/*Update Velocity*/
 	if (velocity > 0) {
 		// Forward Movement
