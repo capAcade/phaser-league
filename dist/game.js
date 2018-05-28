@@ -17,9 +17,12 @@ function create() {
 	
 	/*Enable Phyics Engine*/
 	game.physics.startSystem(Phaser.Physics.P2JS);
+	game.physics.p2.setImpactEvents(true);
+	game.physics.p2.restitution = 0.8;
+	
 	/*Adding Map*/
 	map2 = game.add.tilemap('map2');
-	map2.addTilesetImage('Arena1', 'tiles2');
+	map2.addTilesetImage('PhaserLeague-Tileset', 'tiles2');
 	map2.setCollisionBetween(0,218);
 	map2.setCollisionBetween(220,323);
 	layer2 = map2.createLayer(0);
