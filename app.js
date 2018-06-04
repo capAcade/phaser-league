@@ -7,7 +7,7 @@ var options = {
 };
 
 // Static serve dist directory on root
-app.use('/', express.static('dist', options));
+app.use('/', express.static('src', options));
 
 app.get('/hello', function (req, res) {
     res.send('Hello World');
