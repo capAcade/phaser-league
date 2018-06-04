@@ -34,19 +34,10 @@ Game.prototype = {
         car[1].body.collideWorldBounds = true;
         car[1].body.angle = 270;
 
-        /*Adding car 2*/
-        cat = game.add.sprite(420, 320, 'car2');
-        game.physics.p2.enable(cat);
-        cat.body.collideWorldBounds = true;
-        cat.body.angle = 270;
-
-
         /*Adding Ball*/
         var ball = game.add.sprite(640, 512, 'ball');
         game.physics.p2.enable(ball);
         ball.body.collideWorldBounds = true;
-
-        this.cursors = game.input.keyboard.createCursorKeys();
 
         /*Create Collision Groups*/
         var car1CollisionGroup = game.physics.p2.createCollisionGroup();
@@ -68,14 +59,14 @@ Game.prototype = {
     update: function () {
         var self = this;
 
-        var updatePlayer = function(i, up, down, left, right, handbrake) {
+        var updatePlayer = function(i, controls) {
             /*Update Velocity*/
             if (self.velocity[i] > 0) {
                 // Forward Movement
-                if (up && self.velocity[i] <= 600) {
+                if (controls.up && self.velocity[i] <= 600) {
                     // Accelerate
                     self.velocity[i] += 9;
-                } else if (down) {
+                } else if (controls.down) {
                     // Break
                     self.velocity[i] -= 24;
                 } else {
@@ -84,10 +75,10 @@ Game.prototype = {
                 }
             } else if (self.velocity[i] < 0) {
                 // Backwards Movement
-                if (up) {
+                if (controls.up) {
                     // Break
                     self.velocity[i] += 24;
-                } else if (down && self.velocity[i] >= -300) {
+                } else if (controls.down && self.velocity[i] >= -300) {
                     // Accelerate
                     self.velocity[i] -= 9;
                 } else {
@@ -95,10 +86,10 @@ Game.prototype = {
                     self.velocity[i] += 6
                 }
             } else if (self.velocity[i] === 0) {
-                if (up) {
+                if (controls.up) {
                     // Accelerate
                     self.velocity[i] += 9;
-                } else if (down) {
+                } else if (controls.down) {
                     // Accelerate
                     self.velocity[i] -= 9;
                 } else {
@@ -111,14 +102,14 @@ Game.prototype = {
             car[i].body.velocity.y = self.velocity[i] * Math.sin((car[i].angle - 90) * 0.01745);
 
             /*Rotation of Car*/
-            if (left) {
-                if (handbrake) {
+            if (controls.left) {
+                if (controls.eBrake) {
                     car[i].body.angularVelocity = -5 * (self.velocity[i] / 300);
                 } else {
                     car[i].body.angularVelocity = -5 * (self.velocity[i] / 600);
                 }
-            } else if (right) {
-                if (handbrake) {
+            } else if (controls.right) {
+                if (controls.eBrake) {
                     car[i].body.angularVelocity = 5 * (self.velocity[i] / 300);
                 } else {
                     car[i].body.angularVelocity = 5 * (self.velocity[i] / 600);
@@ -128,7 +119,23 @@ Game.prototype = {
             }
         };
 
-        updatePlayer(0, self.cursors.up.isDown, self.cursors.down.isDown, self.cursors.left.isDown, self.cursors.right.isDown, game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown);
-        updatePlayer(1, self.cursors.up.isDown, self.cursors.down.isDown, self.cursors.left.isDown, self.cursors.right.isDown, game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown);
+        var player1controls = {
+            "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
+            "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
+            "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
+            "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
+            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
+        };
+
+        var player2controls = {
+            "up": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
+            "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
+            "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
+            "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
+            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
+        };
+
+        updatePlayer(0, player1controls);
+        updatePlayer(1, player2controls);
     },
 };
