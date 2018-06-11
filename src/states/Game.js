@@ -5,6 +5,8 @@ Game.prototype = {
         this.optionCount = 1;
         this.playerCount = 2;
         this.cars = [];
+        this.map = {};
+        this.layer = {};
 
         this.velocity = [];
         var i;
@@ -19,7 +21,12 @@ Game.prototype = {
         game.physics.startSystem(Phaser.Physics.P2JS);
 
         /*Adding Map*/
-        var map = game.add.sprite(0, 0, 'map');
+        self.map = game.add.tilemap('map');
+        self.map.addTilesetImage('PhaserLeague-Tileset', 'tiles');
+        self.map.setCollisionBetween(0,218);
+        self.map.setCollisionBetween(220,323);
+        self.layer = self.map.createLayer(0);
+        self.layer.resizeWorld();
 
         /*Adding cars*/
         var carsOption = [
@@ -54,6 +61,9 @@ Game.prototype = {
         var car1CollisionGroup = game.physics.p2.createCollisionGroup();
         var car2CollisionGroup = game.physics.p2.createCollisionGroup();
         var ballCollisionGroup = game.physics.p2.createCollisionGroup();
+
+        var wallsCG =  game.physics.p2.createCollisionGroup();
+
         game.physics.p2.updateBoundsCollisionGroup();
 
         //Set Collision Groups
@@ -61,10 +71,20 @@ Game.prototype = {
         self.cars[1].body.setCollisionGroup(car2CollisionGroup);
         ball.body.setCollisionGroup(ballCollisionGroup);
 
+        var walls = game.physics.p2.convertCollisionObjects(self.map, "Collisions", true);
+        for(var wall in walls)
+        {
+            walls[wall].setCollisionGroup(wallsCG);
+            walls[wall].collides([car1CollisionGroup, car2CollisionGroup, ballCollisionGroup]);
+        }
+
         //Set Collision
         self.cars[0].body.collides([car1CollisionGroup, car2CollisionGroup, ballCollisionGroup]);
         self.cars[1].body.collides([car2CollisionGroup, car1CollisionGroup, ballCollisionGroup]);
         ball.body.collides([ballCollisionGroup, car1CollisionGroup, car2CollisionGroup]);
+        // walls.body.collides(wallsCG,stopCar,this);
+
+
     },
     update: function () {
         var self = this;
