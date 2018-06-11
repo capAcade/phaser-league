@@ -19,7 +19,7 @@ Main.prototype = {
         game.load.script('utils', 'lib/utils.js');
         game.load.script('splash', 'states/Splash.js');
         game.load.spritesheet('map', 'assets/images/map.jpg');
-        game.load.spritesheet('car1', 'assets/images/car.png');
+        game.load.spritesheet('car1', 'assets/images/car1.png');
         game.load.spritesheet('car2', 'assets/images/car2.png');
         game.load.spritesheet('ball', 'assets/images/ball.png');
         game.load.physics("collision", "assets/collision/collision.json");

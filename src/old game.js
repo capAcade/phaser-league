@@ -2,7 +2,7 @@ var main = new Phaser.Game(1280, 839, Phaser.AUTO, 'main_game', { preload: prelo
 
 function preload() {
 	main.load.spritesheet('map','assets/map.jpg');
-	main.load.spritesheet('car','assets/car.png');
+	main.load.spritesheet('cars','assets/cars.png');
 	main.load.spritesheet('ball', 'assets/ball.jpg');
 	main.load.physics("collision","assets/collision.json");
 }
@@ -17,11 +17,11 @@ function create() {
 	/*Adding Map*/
 	var map = main.add.sprite(0,0,'map');
 
-	/*Adding car*/
-	car = main.add.sprite(320,420,'car');
-	main.physics.p2.enable(car);
-	car.body.collideWorldBounds = true;
-	car.body.angle = 90;
+	/*Adding cars*/
+	cars = main.add.sprite(320,420,'cars');
+	main.physics.p2.enable(cars);
+	cars.body.collideWorldBounds = true;
+	cars.body.angle = 90;
 
     /*Adding Ball*/
     var ball = main.add.sprite(640,420,'ball');
@@ -36,11 +36,11 @@ function create() {
     main.physics.p2.updateBoundsCollisionGroup();
 
 	//Set Collision Groups
-	car.body.setCollisionGroup(carCollisionGroup);
+	cars.body.setCollisionGroup(carCollisionGroup);
 	ball.body.setCollisionGroup(ballCollisionGroup);
 
 	//Set Collision
-	car.body.collides([carCollisionGroup,ballCollisionGroup]);
+	cars.body.collides([carCollisionGroup,ballCollisionGroup]);
 	ball.body.collides([ballCollisionGroup,carCollisionGroup]);
 }
 
@@ -84,8 +84,8 @@ function update()
 	}
 
 	/*Set X and Y Speed of Velocity*/
-	car.body.velocity.x = velocity * Math.cos((car.angle-90)*0.01745);
-	car.body.velocity.y = velocity * Math.sin((car.angle-90)*0.01745);
+	cars.body.velocity.x = velocity * Math.cos((cars.angle-90)*0.01745);
+	cars.body.velocity.y = velocity * Math.sin((cars.angle-90)*0.01745);
 
 	/* handBreak */
     handbrake = main.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -93,17 +93,17 @@ function update()
 	/*Rotation of Car*/
 	if (cursors.left.isDown) {
         if (handbrake.isDown) {
-            car.body.angularVelocity = -5 * (velocity / 300);
+            cars.body.angularVelocity = -5 * (velocity / 300);
         } else {
-            car.body.angularVelocity = -5 * (velocity / 600);
+            cars.body.angularVelocity = -5 * (velocity / 600);
 		}
     } else if (cursors.right.isDown) {
         if (handbrake.isDown) {
-            car.body.angularVelocity = 5*(velocity / 300);
+            cars.body.angularVelocity = 5*(velocity / 300);
         } else {
-            car.body.angularVelocity = 5*(velocity / 600);
+            cars.body.angularVelocity = 5*(velocity / 600);
         }
 	} else {
-        car.body.angularVelocity = 0;
+        cars.body.angularVelocity = 0;
 	}
 }

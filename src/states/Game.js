@@ -1,10 +1,10 @@
 var Game = function (game) {};
 
 Game.prototype = {
-
     preload: function () {
         this.optionCount = 1;
         this.playerCount = 2;
+        this.cars = [];
 
         this.velocity = [];
         var i;
@@ -12,27 +12,38 @@ Game.prototype = {
             this.velocity.push(0);
         }
     },
-
     create: function () {
+        var self = this;
+
         /*Enable Phyics Engine*/
         game.physics.startSystem(Phaser.Physics.P2JS);
 
         /*Adding Map*/
         var map = game.add.sprite(0, 0, 'map');
 
-        car = [];
-
-        /*Adding car 1*/
-        car[0] = game.add.sprite(320, 420, 'car1');
-        game.physics.p2.enable(car[0]);
-        car[0].body.collideWorldBounds = true;
-        car[0].body.angle = 90;
-
-        /*Adding car 2*/
-        car[1] = game.add.sprite(420, 320, 'car2');
-        game.physics.p2.enable(car[1]);
-        car[1].body.collideWorldBounds = true;
-        car[1].body.angle = 270;
+        /*Adding cars*/
+        var carsOption = [
+            {
+                "name": "car1",
+                "beginX": 320,
+                "beginY": 512,
+                "beginAngle": 90
+            },
+            {
+                "name": "car2",
+                "beginX": 960,
+                "beginY": 512,
+                "beginAngle": 270
+            }
+        ];
+        for(var i = 0; i < self.playerCount; i++) {
+            console.log(i);
+            self.cars[i] = game.add.sprite(carsOption[i].beginX, carsOption[i].beginY, carsOption[i].name);
+            game.physics.p2.enable(self.cars[i]);
+            console.log(self.cars[i].body);
+            self.cars[i].body.collideWorldBounds = true;
+            self.cars[i].body.angle = carsOption[i].beginAngle;
+        }
 
         /*Adding Ball*/
         var ball = game.add.sprite(640, 512, 'ball');
@@ -46,19 +57,23 @@ Game.prototype = {
         game.physics.p2.updateBoundsCollisionGroup();
 
         //Set Collision Groups
-        car[0].body.setCollisionGroup(car1CollisionGroup);
-        car[1].body.setCollisionGroup(car2CollisionGroup);
+        self.cars[0].body.setCollisionGroup(car1CollisionGroup);
+        self.cars[1].body.setCollisionGroup(car2CollisionGroup);
         ball.body.setCollisionGroup(ballCollisionGroup);
 
         //Set Collision
-        car[0].body.collides([car1CollisionGroup, car2CollisionGroup, ballCollisionGroup]);
-        car[1].body.collides([car2CollisionGroup, car1CollisionGroup, ballCollisionGroup]);
+        self.cars[0].body.collides([car1CollisionGroup, car2CollisionGroup, ballCollisionGroup]);
+        self.cars[1].body.collides([car2CollisionGroup, car1CollisionGroup, ballCollisionGroup]);
         ball.body.collides([ballCollisionGroup, car1CollisionGroup, car2CollisionGroup]);
     },
-
     update: function () {
         var self = this;
 
+        /**
+         * Function to update player actions
+         * @param i index of player
+         * @param controls object with control actions
+         */
         var updatePlayer = function(i, controls) {
             /*Update Velocity*/
             if (self.velocity[i] > 0) {
@@ -98,27 +113,31 @@ Game.prototype = {
             }
 
             /*Set X and Y Speed of Velocity 1*/
-            car[i].body.velocity.x = self.velocity[i] * Math.cos((car[i].angle - 90) * 0.01745);
-            car[i].body.velocity.y = self.velocity[i] * Math.sin((car[i].angle - 90) * 0.01745);
+            self.cars[i].body.velocity.x = self.velocity[i] * Math.cos((self.cars[i].angle - 90) * 0.01745);
+            self.cars[i].body.velocity.y = self.velocity[i] * Math.sin((self.cars[i].angle - 90) * 0.01745);
 
             /*Rotation of Car*/
             if (controls.left) {
                 if (controls.eBrake) {
-                    car[i].body.angularVelocity = -5 * (self.velocity[i] / 300);
+                    self.cars[i].body.angularVelocity = -5 * (self.velocity[i] / 300);
                 } else {
-                    car[i].body.angularVelocity = -5 * (self.velocity[i] / 600);
+                    self.cars[i].body.angularVelocity = -5 * (self.velocity[i] / 600);
                 }
             } else if (controls.right) {
                 if (controls.eBrake) {
-                    car[i].body.angularVelocity = 5 * (self.velocity[i] / 300);
+                    self.cars[i].body.angularVelocity = 5 * (self.velocity[i] / 300);
                 } else {
-                    car[i].body.angularVelocity = 5 * (self.velocity[i] / 600);
+                    self.cars[i].body.angularVelocity = 5 * (self.velocity[i] / 600);
                 }
             } else {
-                car[i].body.angularVelocity = 0;
+                self.cars[i].body.angularVelocity = 0;
             }
         };
 
+        /**
+         * Player 1 controls
+         * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
+         */
         var player1controls = {
             "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
             "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
@@ -127,6 +146,10 @@ Game.prototype = {
             "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
         };
 
+        /**
+         * Player 2 controls
+         * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
+         */
         var player2controls = {
             "up": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
             "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
@@ -135,6 +158,9 @@ Game.prototype = {
             "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
         };
 
+        /**
+         * Call functions to update for each player
+         */
         updatePlayer(0, player1controls);
         updatePlayer(1, player2controls);
     },
