@@ -12,41 +12,55 @@ var cursors;
 var velocity = 0;
 var layer2;
 var car;
+var text;
+var count = 0;
 
 function create() {
 	
 	/*Enable Phyics Engine*/
 	game.physics.startSystem(Phaser.Physics.P2JS);
 	game.physics.p2.setImpactEvents(true);
-	game.physics.p2.restitution = 0.8;
+	cursors = game.input.keyboard.createCursorKeys();
 	
 	/*Adding Map*/
 	map2 = game.add.tilemap('map2');
 	map2.addTilesetImage('PhaserLeague-Tileset', 'tiles2');
-	map2.setCollisionBetween(0,218);
-	map2.setCollisionBetween(220,323);
 	layer2 = map2.createLayer(0);
-	layer2.resizeWorld();
+	
 
+	
+	/*Create Collision Groups*/
+	var carCollisionGroup = game.physics.p2.createCollisionGroup();
+	var wallsCG =  game.physics.p2.createCollisionGroup();
+	game.physics.p2.updateBoundsCollisionGroup();
+
+	//Set Collision Groups
+	 var walls = game.physics.p2.convertCollisionObjects(map2, "Collisions", true);   
+	  for(var wall in walls)
+	  {
+	    walls[wall].setCollisionGroup(wallsCG);
+	    walls[wall].collides(carCollisionGroup);
+	  }
+	//building.body.setCollisionGroup(buildingCollisionGroup);
+	
 	/*Adding car*/
 	car = game.add.sprite(570,100,'car');
 	game.physics.p2.enable(car);
 	car.body.angle = 90;
-	
-	cursors = game.input.keyboard.createCursorKeys();
-	
-	/*Create Collision Groups*/
-	var carCollisionGroup = game.physics.p2.createCollisionGroup();
-	var buildingCollisionGroup = game.physics.p2.createCollisionGroup();
-	game.physics.p2.updateBoundsCollisionGroup();
-	
-	//Set Collision Groups
-	car.body.setCollisionGroup(carCollisionGroup);
-	//building.body.setCollisionGroup(buildingCollisionGroup);
-	
-	//Set Collision
-	car.body.collides([carCollisionGroup,buildingCollisionGroup]);
-	//building.body.collides([buildingCollisionGroup,carCollisionGroup]);
+	game.physics.p2.enable(car,false); 
+	car.scale.setTo(.5,.5);
+	car.body.setCircle(28);
+ 	car.anchor.setTo(0.5, 0.5);
+
+  	car.body.setCollisionGroup(carCollisionGroup);
+	car.body.collides(wallsCG,stopCar,this);
+
+	layer2.resizeWorld();
+	 text = game.add.text(game.camera.x,game.camera.y, "Score: 0", {
+        font: "24px Arial",
+        fill: "#ff0044",
+        align: "center"
+    });
 }
 
 function update()
@@ -114,4 +128,20 @@ function update()
 		car.body.angularVelocity = 5*(velocity/1000);
 	else
 		car.body.angularVelocity = 0;
+}
+
+ 
+function updateText() {
+
+   // This updates every frame
+    text.setText("Score:" + count);
+
+}
+
+function stopCar(player, car) {
+ // we touched a coin, so kill it, update our score, and then update our score text
+	velocity = 0;
+	count--;
+	updateText();
+
 }
