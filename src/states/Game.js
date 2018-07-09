@@ -20,6 +20,7 @@ Game.prototype = {
 
         /*Enable Phyics Engine*/
         game.physics.startSystem(Phaser.Physics.P2JS);
+        game.physics.p2.setImpactEvents(true);
 
         /*Adding Map*/
         self.map = game.add.tilemap('map');
@@ -43,10 +44,8 @@ Game.prototype = {
             }
         ];
         for(var i = 0; i < self.playerCount; i++) {
-            console.log(i);
             self.cars[i] = game.add.sprite(carsOption[i].beginX, carsOption[i].beginY, carsOption[i].name);
             game.physics.p2.enable(self.cars[i]);
-            console.log(self.cars[i].body);
             self.cars[i].body.collideWorldBounds = true;
             self.cars[i].body.angle = carsOption[i].beginAngle;
         }
@@ -62,7 +61,10 @@ Game.prototype = {
         var ballCollisionGroup = game.physics.p2.createCollisionGroup();
 
         var wallsCG =  game.physics.p2.createCollisionGroup();
-
+        var Goal1CG =  game.physics.p2.createCollisionGroup();
+        Goal1CG.name = "Goal1";
+        var Goal2CG =  game.physics.p2.createCollisionGroup();
+        Goal2CG.name = "Goal2";
         // game.physics.p2.updateBoundsCollisionGroup();
 
         //Set Collision Groups
@@ -76,19 +78,32 @@ Game.prototype = {
             walls[wall].setCollisionGroup(wallsCG);
             walls[wall].collides([car1CollisionGroup, car2CollisionGroup, ballCollisionGroup]);
         }
+        var goals = game.physics.p2.convertCollisionObjects(self.map, "Goals", true);
+        for(var goal in goals)
+        {
+            if(goal.name="Goal1"){
+            goals[goal].setCollisionGroup(Goal1CG);
+            goals[goal].collides(ballCollisionGroup,self.stopCar, this);
+            }
+            if(goal.name="Goal2"){
+            goals[goal].setCollisionGroup(Goal2CG);
+            goals[goal].collides(ballCollisionGroup,self.stopCar, this);
+            }
+        }
 
         //Set Collision
         self.cars[0].body.collides([car2CollisionGroup, ballCollisionGroup]);
-        self.cars[0].body.collides(wallsCG,self.stopCar);
+        self.cars[0].body.collides(wallsCG,self.stopCar,this);
         self.cars[1].body.collides([car1CollisionGroup, ballCollisionGroup,wallsCG]);
         ball.body.collides([car1CollisionGroup, car2CollisionGroup,wallsCG]);
-
-    },
-    stopCar: function () {
+        ball.body.collides(Goal1CG,self.stopCar("Goal1"), this);
+        ball.body.collides(Goal2CG,self.stopCar, null, this);
+    },   
+    stopCar: function (ball, goal, type, type1, type3, type4) {
         var self = this;
 
         self.score++;
-        console.log("Score:" + self.score);
+            console.log("Scored in: " + type );
     },
     update: function () {
         var self = this;
