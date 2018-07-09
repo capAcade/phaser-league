@@ -70,7 +70,7 @@ Game.prototype = {
         self.cars[1].body.setCollisionGroup(car2CollisionGroup);
         ball.body.setCollisionGroup(ballCollisionGroup);
 
-        var walls = game.physics.p2.convertCollisionObjects(self.map, "Collisions", true);
+        var walls = game.physics.p2.convertCollisionObjects(self.map, "Walls", true);
         for(var wall in walls)
         {
             walls[wall].setCollisionGroup(wallsCG);
