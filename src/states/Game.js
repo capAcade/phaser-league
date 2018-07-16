@@ -78,32 +78,39 @@ Game.prototype = {
             walls[wall].setCollisionGroup(wallsCG);
             walls[wall].collides([car1CollisionGroup, car2CollisionGroup, ballCollisionGroup]);
         }
-        var goals = game.physics.p2.convertCollisionObjects(self.map, "Goals", true);
-        for(var goal in goals)
+
+        /* TODO: We can probably remove the for-loops, as we now have a seperate layer per goal. */
+        var goal1 = game.physics.p2.convertCollisionObjects(self.map, "Goal1", true);
+        for(var goal in goal1)
         {
-            if(goal.name="Goal1"){
-            goals[goal].setCollisionGroup(Goal1CG);
-            goals[goal].collides(ballCollisionGroup,self.stopCar, this);
-            }
-            if(goal.name="Goal2"){
-            goals[goal].setCollisionGroup(Goal2CG);
-            goals[goal].collides(ballCollisionGroup,self.stopCar, this);
-            }
+            goal1[goal].setCollisionGroup(Goal1CG);
+            goal1[goal].collides(ballCollisionGroup);
+        }
+        var goal2 = game.physics.p2.convertCollisionObjects(self.map, "Goal2", true);
+        for(var goal in goal2)
+        {
+            goal2[goal].setCollisionGroup(Goal2CG);
+            goal2[goal].collides(ballCollisionGroup);
         }
 
         //Set Collision
-        self.cars[0].body.collides([car2CollisionGroup, ballCollisionGroup]);
-        self.cars[0].body.collides(wallsCG,self.stopCar,this);
+        self.cars[0].body.collides([car2CollisionGroup, ballCollisionGroup,wallsCG]);
         self.cars[1].body.collides([car1CollisionGroup, ballCollisionGroup,wallsCG]);
-        ball.body.collides([car1CollisionGroup, car2CollisionGroup,wallsCG]);
-        ball.body.collides(Goal1CG,self.stopCar("Goal1"), this);
-        ball.body.collides(Goal2CG,self.stopCar, null, this);
+        ball.body.collides([car1CollisionGroup, car2CollisionGroup, wallsCG]);
+        ball.body.collides([Goal1CG],self.handleGoal1, this);
+        ball.body.collides([Goal2CG],self.handleGoal2, this);
     },   
-    stopCar: function (ball, goal, type, type1, type3, type4) {
+    handleGoal1: function (){
+        this.scoreGoal("Goal1");
+    },
+    handleGoal2: function (){
+        this.scoreGoal("Goal2");
+    },
+    scoreGoal: function(goal) {
         var self = this;
 
         self.score++;
-            console.log("Scored in: " + type );
+            console.log("Scored in: " + goal );
     },
     update: function () {
         var self = this;
