@@ -14,6 +14,21 @@ Game.prototype = {
         for(i = 0; i < this.playerCount; i++) {
             this.velocity.push(0);
         }
+
+        this.carsOption = [
+            {
+                "name": "car1",
+                "beginX": 320,
+                "beginY": 512,
+                "beginAngle": 90
+            },
+            {
+                "name": "car2",
+                "beginX": 960,
+                "beginY": 512,
+                "beginAngle": 270
+            }
+        ];
     },
     create: function () {
         var self = this;
@@ -29,31 +44,17 @@ Game.prototype = {
         self.layer.resizeWorld();
 
         /*Adding cars*/
-        var carsOption = [
-            {
-                "name": "car1",
-                "beginX": 320,
-                "beginY": 512,
-                "beginAngle": 90
-            },
-            {
-                "name": "car2",
-                "beginX": 960,
-                "beginY": 512,
-                "beginAngle": 270
-            }
-        ];
         for(var i = 0; i < self.playerCount; i++) {
-            self.cars[i] = game.add.sprite(carsOption[i].beginX, carsOption[i].beginY, carsOption[i].name);
+            self.cars[i] = game.add.sprite(self.carsOption[i].beginX, self.carsOption[i].beginY, self.carsOption[i].name);
             game.physics.p2.enable(self.cars[i]);
             self.cars[i].body.collideWorldBounds = true;
-            self.cars[i].body.angle = carsOption[i].beginAngle;
+            self.cars[i].body.angle = self.carsOption[i].beginAngle;
         }
 
         /*Adding Ball*/
-        var ball = game.add.sprite(640, 512, 'ball');
-        game.physics.p2.enable(ball);
-        ball.body.collideWorldBounds = true;
+        self.ball = game.add.sprite(640, 512, 'ball');
+        game.physics.p2.enable(self.ball);
+        self.ball.body.collideWorldBounds = true;
 
         /*Create Collision Groups*/
         var car1CollisionGroup = game.physics.p2.createCollisionGroup();
@@ -70,7 +71,7 @@ Game.prototype = {
         //Set Collision Groups
         self.cars[0].body.setCollisionGroup(car1CollisionGroup);
         self.cars[1].body.setCollisionGroup(car2CollisionGroup);
-        ball.body.setCollisionGroup(ballCollisionGroup);
+        self.ball.body.setCollisionGroup(ballCollisionGroup);
 
         var walls = game.physics.p2.convertCollisionObjects(self.map, "Walls", true);
         for(var wall in walls)
@@ -96,9 +97,9 @@ Game.prototype = {
         //Set Collision
         self.cars[0].body.collides([car2CollisionGroup, ballCollisionGroup,wallsCG]);
         self.cars[1].body.collides([car1CollisionGroup, ballCollisionGroup,wallsCG]);
-        ball.body.collides([car1CollisionGroup, car2CollisionGroup, wallsCG]);
-        ball.body.collides([Goal1CG],self.handleGoal1, this);
-        ball.body.collides([Goal2CG],self.handleGoal2, this);
+        self.ball.body.collides([car1CollisionGroup, car2CollisionGroup, wallsCG]);
+        self.ball.body.collides([Goal1CG],self.handleGoal1, this);
+        self.ball.body.collides([Goal2CG],self.handleGoal2, this);
     },   
     handleGoal1: function (){
         this.scoreGoal("Goal1");
@@ -110,7 +111,29 @@ Game.prototype = {
         var self = this;
 
         self.score++;
-            console.log("Scored in: " + goal );
+        console.log("Scored in: " + goal );
+
+        self.resetPosition();
+    },
+    resetPosition: function() {
+        var self = this;
+        console.log(self.cars);
+
+        for(var i = 0; i < self.playerCount; i++) {
+            self.cars[i].body.x = self.carsOption[i].beginX;
+            self.cars[i].body.y = self.carsOption[i].beginY;
+            self.cars[i].body.angle = self.carsOption[i].beginAngle;
+            self.cars[i].body.velocity.x = 0;
+            self.cars[i].body.velocity.y = 0;
+            self.cars[i].body.angularVelocity = 0;
+        }
+
+        self.ball.body.x = 640;
+        self.ball.body.y = 512;
+        self.ball.body.angle = 0;
+        self.ball.body.velocity.x = 0;
+        self.ball.body.velocity.y = 0;
+        self.ball.body.angularVelocity = 0;
     },
     update: function () {
         var self = this;
