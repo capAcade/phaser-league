@@ -100,19 +100,27 @@ Game.prototype = {
         self.ball.body.collides([car1CollisionGroup, car2CollisionGroup, wallsCG]);
         self.ball.body.collides([Goal1CG],self.handleGoal1, this);
         self.ball.body.collides([Goal2CG],self.handleGoal2, this);
-    },   
+
+        // render score
+        var style1 = { font: "42px Arial", fill: "#0000ff", align: "center" };
+        var style2 = { font: "42px Arial", fill: "#ff0000", align: "center" };
+        self.textScore1 = game.add.text(game.world.centerX - 50, 50, self.score[0], style1);
+        self.textScore2 = game.add.text(game.world.centerX + 50, 50, self.score[1], style2);
+        self.textScore1.anchor.set(0.5);
+        self.textScore2.anchor.set(0.5);
+    },
     handleGoal1: function (){
-        this.scoreGoal("Goal1");
+        this.scoreGoal(1);
     },
     handleGoal2: function (){
-        this.scoreGoal("Goal2");
+        this.scoreGoal(0);
     },
     scoreGoal: function(goal) {
         var self = this;
-
-        self.score++;
-        console.log("Scored in: " + goal );
-
+        self.score[goal]++;
+        console.log(self.socre);
+        self.textScore1.setText(self.score[0]);
+        self.textScore2.setText(self.score[1]);
         self.resetPosition();
     },
     resetPosition: function() {
