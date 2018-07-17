@@ -47,6 +47,7 @@ Game.prototype = {
         for(var i = 0; i < self.playerCount; i++) {
             self.cars[i] = game.add.sprite(self.carsOption[i].beginX, self.carsOption[i].beginY, self.carsOption[i].name);
             game.physics.p2.enable(self.cars[i]);
+            //self.cars[i].body.loadPolygon("sprite_physics", self.carsOption[i].name);
             self.cars[i].body.collideWorldBounds = true;
             self.cars[i].body.angle = self.carsOption[i].beginAngle;
         }
@@ -54,6 +55,7 @@ Game.prototype = {
         /*Adding Ball*/
         self.ball = game.add.sprite(640, 512, 'ball');
         game.physics.p2.enable(self.ball);
+        //elf.ball.body.loadPolygon("sprite_physics", 'ball');
         self.ball.body.collideWorldBounds = true;
 
         /*Create Collision Groups*/

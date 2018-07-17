@@ -23,6 +23,7 @@ Main.prototype = {
         game.load.spritesheet('ball', 'assets/images/ball.png');
         game.load.physics("collision", "assets/collision/collision.json");
         game.load.tilemap('map', 'assets/phaserleage_tiledmap_arena1.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.physics("sprite_physics", "assets/collision/sprite_physics.json");
         game.load.image('tiles', 'assets/set.gif');
     },
 
