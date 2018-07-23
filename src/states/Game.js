@@ -133,31 +133,46 @@ Game.prototype = {
         self.textScore1.setText(self.score[0]);
         self.textScore2.setText(self.score[1]);
 
-        // re enabling scoring as ball location is reset and goal points are handled
-        self.enableScoring = true;
     },
     resetPosition: function() {
         var self = this;
+        
+        //start countdown animation
+        setTimeout(function(){
 
-        for(var i = 0; i < self.playerCount; i++) {
-            self.cars[i].body.x = self.carsOption[i].beginX;
-            self.cars[i].body.y = self.carsOption[i].beginY;
-            self.cars[i].body.angle = self.carsOption[i].beginAngle;
-            self.cars[i].body.velocity.x = 0;
-            self.cars[i].body.velocity.y = 0;
-            self.cars[i].body.angularVelocity = 0;
-        }
+                for(var i = 0; i < self.playerCount; i++) {
+                    self.cars[i].body.angle = self.carsOption[i].beginAngle;
+                    // self.cars[i].body.velocity.x = 0;
+                    // self.cars[i].body.velocity.y = 0;
+                    // self.cars[i].body.angularVelocity = 0;
+                    // self.cars[i].body.angularAcceleration = 0;
+                    self.cars[i].body.setZeroVelocity();
+                    self.cars[i].body.setZeroDamping();
+                    console.log("x-Velocity of car"+ i +": "+self.cars[i].body.velocity.x);
+                    //self.cars[i].body.reset();
+                    self.cars[i].body.x = self.carsOption[i].beginX;
+                    self.cars[i].body.y = self.carsOption[i].beginY;
+                    
+                }
 
-        self.ball.body.x = 640;
-        self.ball.body.y = 512;
-        self.ball.body.angle = 0;
-        self.ball.body.velocity.x = 0;
-        self.ball.body.velocity.y = 0;
-        self.ball.body.angularVelocity = 0;
+                self.ball.body.x = 640;
+                self.ball.body.y = 512;
+                self.ball.body.angle = 0;
+                self.ball.body.velocity.x = 0;
+                self.ball.body.velocity.y = 0;
+                self.ball.body.angularVelocity = 0;
+                
+                // re enabling scoring as ball location is reset and goal points are handled
+                self.enableScoring = true;
+
+        },3000)
+      
     },
     update: function () {
-        var self = this;
+    var self = this;
 
+
+        
         /**
          * Function to update player actions
          * @param i index of player
@@ -250,7 +265,13 @@ Game.prototype = {
         /**
          * Call functions to update for each player
          */
-        updatePlayer(0, player1controls);
-        updatePlayer(1, player2controls);
+         if(this.enableScoring){
+            updatePlayer(0, player1controls);
+            updatePlayer(1, player2controls);
+            
+        } else {
+            self.velocity[0] = 0;
+            self.velocity[1] = 0;
+        };
     },
 };
