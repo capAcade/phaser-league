@@ -8,6 +8,7 @@ Game.prototype = {
         this.map = {};
         this.layer = {};
         this.score = [0,0];
+        this.enableScoring = true;
 
         this.velocity = [];
         var i;
@@ -109,23 +110,32 @@ Game.prototype = {
         self.textScore1.anchor.set(0.5);
         self.textScore2.anchor.set(0.5);
     },
-    handleGoal1: function (){
-        this.scoreGoal(1);
+    handleGoal1: function () {
+        var self = this;
+        if(self.enableScoring) {
+            self.enableScoring = false;
+            self.scoreGoal(1);
+        }
     },
-    handleGoal2: function (){
-        this.scoreGoal(0);
+    handleGoal2: function () {
+        var self = this;
+        if(self.enableScoring) {
+            self.enableScoring = false;
+            self.scoreGoal(0);
+        }
     },
     scoreGoal: function(goal) {
         var self = this;
+        self.resetPosition();
         self.score[goal]++;
-        console.log(self.socre);
         self.textScore1.setText(self.score[0]);
         self.textScore2.setText(self.score[1]);
-        self.resetPosition();
+
+        // re enabling scoring as ball location is reset and goal points are handled
+        self.enableScoring = true;
     },
     resetPosition: function() {
         var self = this;
-        console.log(self.cars);
 
         for(var i = 0; i < self.playerCount; i++) {
             self.cars[i].body.x = self.carsOption[i].beginX;
