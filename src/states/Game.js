@@ -276,7 +276,7 @@ Game.prototype = {
             "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
             "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
             "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
-            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
+            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown
         };
 
         /**
@@ -288,7 +288,7 @@ Game.prototype = {
             "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
             "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
             "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
-            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
+            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown
         };
 
         /**
