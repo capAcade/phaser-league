@@ -10,6 +10,9 @@ Game.prototype = {
         this.score = [0,0];
         this.enableScoring = true;
 
+        this.countDownMessage = '';
+        this.countDown = '';
+
         this.velocity = [];
         var i;
         for(i = 0; i < this.playerCount; i++) {
@@ -116,6 +119,7 @@ Game.prototype = {
         var self = this;
         if(self.enableScoring) {
             self.enableScoring = false;
+            self.scoredPlayer = '2';
             self.scoreGoal(1);
         }
     },
@@ -123,6 +127,7 @@ Game.prototype = {
         var self = this;
         if(self.enableScoring) {
             self.enableScoring = false;
+            self.scoredPlayer = '1';
             self.scoreGoal(0);
         }
     },
@@ -136,37 +141,54 @@ Game.prototype = {
     },
     resetPosition: function() {
         var self = this;
-        
+
+        var styleCountDown = { font: "42px Arial", fill: "#ff00ff", align: "center" };
+        self.textCountDownMessage = game.add.text(game.world.centerX, game.world.centerY - 50, 'Player ' + self.scoredPlayer + ' scored!', styleCountDown);
+        self.textCountDownMessage.anchor.set(0.5);
+        self.textCountDown3 = game.add.text(game.world.centerX, game.world.centerY, 'READY! 3', styleCountDown);
+        self.textCountDown3.anchor.set(0.5);
+
+        setTimeout(function() {
+            self.textCountDown2 = game.add.text(game.world.centerX, game.world.centerY, 'SET? 2', styleCountDown);
+            self.textCountDown2.anchor.set(0.5);
+            self.textCountDown3.destroy();
+        }, 1000)
+
+        setTimeout(function() {
+            self.textCountDown1 = game.add.text(game.world.centerX, game.world.centerY, 'GO! 1', styleCountDown);
+            self.textCountDown1.anchor.set(0.5);
+            self.textCountDown2.destroy();
+        }, 2000)
+
         //start countdown animation
         setTimeout(function(){
-
-                for(var i = 0; i < self.playerCount; i++) {
-                    self.cars[i].body.angle = self.carsOption[i].beginAngle;
-                    // self.cars[i].body.velocity.x = 0;
-                    // self.cars[i].body.velocity.y = 0;
-                    // self.cars[i].body.angularVelocity = 0;
-                    // self.cars[i].body.angularAcceleration = 0;
-                    self.cars[i].body.setZeroVelocity();
-                    self.cars[i].body.setZeroDamping();
-                    console.log("x-Velocity of car"+ i +": "+self.cars[i].body.velocity.x);
-                    //self.cars[i].body.reset();
-                    self.cars[i].body.x = self.carsOption[i].beginX;
-                    self.cars[i].body.y = self.carsOption[i].beginY;
-                    
-                }
-
-                self.ball.body.x = 640;
-                self.ball.body.y = 512;
-                self.ball.body.angle = 0;
-                self.ball.body.velocity.x = 0;
-                self.ball.body.velocity.y = 0;
-                self.ball.body.angularVelocity = 0;
+            self.textCountDown1.destroy();
+            self.textCountDownMessage.destroy();
+            for(var i = 0; i < self.playerCount; i++) {
+                self.cars[i].body.angle = self.carsOption[i].beginAngle;
+                // self.cars[i].body.velocity.x = 0;
+                // self.cars[i].body.velocity.y = 0;
+                // self.cars[i].body.angularVelocity = 0;
+                // self.cars[i].body.angularAcceleration = 0;
+                self.cars[i].body.setZeroVelocity();
+                self.cars[i].body.setZeroDamping();
+                console.log("x-Velocity of car"+ i +": "+self.cars[i].body.velocity.x);
+                //self.cars[i].body.reset();
+                self.cars[i].body.x = self.carsOption[i].beginX;
+                self.cars[i].body.y = self.carsOption[i].beginY;
                 
-                // re enabling scoring as ball location is reset and goal points are handled
-                self.enableScoring = true;
+            }
 
+            self.ball.body.x = 640;
+            self.ball.body.y = 512;
+            self.ball.body.angle = 0;
+            self.ball.body.velocity.x = 0;
+            self.ball.body.velocity.y = 0;
+            self.ball.body.angularVelocity = 0;
+            
+            // re enabling scoring as ball location is reset and goal points are handled
+            self.enableScoring = true;
         },3000)
-      
     },
     update: function () {
     var self = this;
