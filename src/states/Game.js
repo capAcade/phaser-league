@@ -171,8 +171,6 @@ Game.prototype = {
     update: function () {
     var self = this;
 
-
-        
         /**
          * Function to update player actions
          * @param i index of player
