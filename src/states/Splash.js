@@ -14,11 +14,8 @@ Splash.prototype = {
   },
 
   loadBgm: function () {
-    // thanks Kevin Macleod at http://incompetech.com/
-    game.load.audio('dangerous', 'assets/bgm/Dangerous.mp3');
-    game.load.audio('exit', 'assets/bgm/Exit the Premises.mp3');
+    game.load.audio('backgroundSound', 'assets/sound/8-Bit-Mayhem.mp3');
   },
-  // varios freebies found from google image search
   loadImages: function () {
     game.load.image('menu-bg', 'assets/images/menu-bg.jpg');
     game.load.image('options-bg', 'assets/images/options-bg.jpg');
@@ -56,7 +53,6 @@ Splash.prototype = {
   },
 
   addGameStates: function () {
-
     game.state.add("GameMenu",GameMenu);
     game.state.add("Game",Game);
     game.state.add("GameOver",GameOver);
@@ -65,7 +61,7 @@ Splash.prototype = {
   },
 
   addGameMusic: function () {
-    music = game.add.audio('dangerous');
+    music = game.add.audio('backgroundSound');
     music.loop = true;
     music.play();
   },

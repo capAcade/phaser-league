@@ -34,6 +34,14 @@ Game.prototype = {
                 "beginAngle": 270
             }
         ];
+
+        this.soundEngine = [];
+        this.soundRev = [];
+        this.soundSkid = [];
+
+        this.enginePlaying = [false, false];
+        this.revPlaying = [false, false];
+        this.skidPlaying = [false, false];
     },
     create: function () {
         var self = this;
@@ -115,6 +123,11 @@ Game.prototype = {
         self.textScore2 = game.add.text(game.world.centerX + 50, 50, self.score[1], style2);
         self.textScore1.anchor.set(0.5);
         self.textScore2.anchor.set(0.5);
+
+        // Add Sounds
+        self.soundEngine = [game.add.audio('engine1'), game.add.audio('engine2')];
+        self.soundRev = [game.add.audio('rev1'), game.add.audio('rev2')]
+        self.soundSkid = [game.add.audio('skid1'), game.add.audio('skid2')]
     },
     handleGoal1: function () {
         var self = this;
@@ -175,14 +188,8 @@ Game.prototype = {
                 self.textCountDownMessage.destroy();
                 for(var i = 0; i < self.playerCount; i++) {
                     self.cars[i].body.angle = self.carsOption[i].beginAngle;
-                    // self.cars[i].body.velocity.x = 0;
-                    // self.cars[i].body.velocity.y = 0;
-                    // self.cars[i].body.angularVelocity = 0;
-                    // self.cars[i].body.angularAcceleration = 0;
                     self.cars[i].body.setZeroVelocity();
                     self.cars[i].body.setZeroDamping();
-                    // console.log("x-Velocity of car"+ i +": "+self.cars[i].body.velocity.x);
-                    // self.cars[i].body.reset();
                     self.cars[i].body.x = self.carsOption[i].beginX;
                     self.cars[i].body.y = self.carsOption[i].beginY;
                 }
@@ -201,6 +208,35 @@ Game.prototype = {
     },
     update: function () {
     var self = this;
+        var soundStopped = function(sound) {
+            switch(sound) {
+                case self.soundEngine[0]:
+                    self.enginePlaying[0] = false;
+                    break;
+                case self.soundEngine[1]:
+                    self.enginePlaying[1] = false;
+                break;
+                case self.soundRev[0]:
+                    self.revPlaying[0] = false;
+                    break;
+                case self.soundRev[1]:
+                    self.revPlaying[1] = false;
+                break;
+                case self.soundSkid[0]:
+                    self.skidPlaying[0] = false;
+                break;
+                case self.soundSkid[1]:
+                    self.skidPlaying[1] = false;
+                break;
+            }
+        }
+
+        self.soundEngine[0].onStop.add(soundStopped, this);
+        self.soundEngine[1].onStop.add(soundStopped, this);
+        self.soundRev[0].onStop.add(soundStopped, this);
+        self.soundRev[1].onStop.add(soundStopped, this);
+        self.soundSkid[0].onStop.add(soundStopped, this);
+        self.soundSkid[1].onStop.add(soundStopped, this);
 
         /**
          * Function to update player actions
@@ -208,32 +244,58 @@ Game.prototype = {
          * @param controls object with control actions
          */
         var updatePlayer = function(i, controls) {
+            console.log(`${self.enginePlaying[0]}`);
+
             /*Update Velocity*/
-            if (self.velocity[i] > 0) {
+            if (self.velocity[i] > 9) {
                 // Forward Movement
+                if(!self.enginePlaying[i]) {
+                    self.enginePlaying[i] = true;
+                    self.soundEngine[i].play();
+                }
                 if (controls.up && self.velocity[i] <= 600) {
                     // Accelerate
                     self.velocity[i] += 9;
+                    if(!self.revPlaying[i]) {
+                        self.revPlaying[i] = true;
+                        self.soundRev[i].play();
+                    }
                 } else if (controls.down) {
                     // Break
                     self.velocity[i] -= 24;
+                    if(!self.skidPlaying[i]) {
+                        self.skidPlaying[i] = true;
+                        self.soundSkid[i].play();
+                    }
                 } else {
                     // decelerate (friction)
                     self.velocity[i] -= 6
                 }
-            } else if (self.velocity[i] < 0) {
+            } else if (self.velocity[i] < -9) {
                 // Backwards Movement
+                if(!self.enginePlaying[i]) {
+                    self.enginePlaying[i] = true;
+                    self.soundEngine[i].play();
+                }
                 if (controls.up) {
                     // Break
                     self.velocity[i] += 24;
+                    if(!self.skidPlaying[i]) {
+                        self.skidPlaying[i] = true;
+                        self.soundSkid[i].play();
+                    }
                 } else if (controls.down && self.velocity[i] >= -300) {
                     // Accelerate
                     self.velocity[i] -= 9;
+                    if(!self.revPlaying[i]) {
+                        self.revPlaying[i] = true;
+                        self.soundRev[i].play();
+                    }
                 } else {
                     // decelerate (friction)
                     self.velocity[i] += 6
                 }
-            } else if (self.velocity[i] === 0) {
+            } else {
                 if (controls.up) {
                     // Accelerate
                     self.velocity[i] += 9;
