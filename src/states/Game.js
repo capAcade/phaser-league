@@ -363,22 +363,32 @@ Game.prototype = {
              * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
              */
             player1controls = {
-                "up": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown,
-                "down": game.input.keyboard.addKey(Phaser.Keyboard.ALT).isDown,
+                "upUnused": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
+                "downUnused": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
                 "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
                 "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
-                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
+                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown,
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.ALT).isDown,
+                "blue1": game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).isDown,
+                "blue2": game.input.keyboard.addKey(Phaser.Keyboard.P).isDown,
+                "blue3": game.input.keyboard.addKey(Phaser.Keyboard.Z).isDown,
             };
             /**
              * Player 2 controls
              * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
              */
             player2controls = {
-                "up": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
-                "down": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
+                "upUnused": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
+                "downUnused": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
                 "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
                 "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
-                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
+                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown,
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
+                "blue1": game.input.keyboard.addKey(Phaser.Keyboard.W).isDown,
+                "blue2": game.input.keyboard.addKey(Phaser.Keyboard.K).isDown,
+                "blue3": game.input.keyboard.addKey(Phaser.Keyboard.I).isDown
             };
         }
 
