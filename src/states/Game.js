@@ -2,6 +2,8 @@ var Game = function (game) {};
 
 Game.prototype = {
     preload: function () {
+        this.isKeyboardInput = false;
+
         this.optionCount = 1;
         this.playerCount = 2;
         this.cars = [];
@@ -329,29 +331,56 @@ Game.prototype = {
             }
         };
 
-        /**
-         * Player 1 controls
-         * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
-         */
-        var player1controls = {
-            "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
-            "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
-            "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
-            "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
-            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown
-        };
+        var player1controls;
+        var player2controls;
 
-        /**
-         * Player 2 controls
-         * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
-         */
-        var player2controls = {
-            "up": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
-            "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
-            "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
-            "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
-            "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown
-        };
+        if(this.isKeyboardInput) {
+            /**
+             * Player 1 controls
+             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
+             */
+            player1controls = {
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
+                "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
+                "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
+                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
+            };
+            /**
+             * Player 2 controls
+             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
+             */
+            player2controls = {
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
+                "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
+                "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
+                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
+            };
+        } else {
+            /**
+             * Player 1 controls
+             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
+             */
+            player1controls = {
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.ALT).isDown,
+                "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
+                "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
+                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
+            };
+            /**
+             * Player 2 controls
+             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
+             */
+            player2controls = {
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
+                "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
+                "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
+                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
+            };
+        }
 
         /**
          * Call functions to update for each player
