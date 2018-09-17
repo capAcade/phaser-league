@@ -25,35 +25,21 @@ GameMenu.prototype = {
     },
 
     create: function () {
+        var styleCountDown = { font: "42px Arial", fill: "#ff0000", align: "center" };
+        self.textWinner = game.add.text(game.world.centerX, game.world.centerY - 50, 'Select Number of Players, ONE or TWO?', styleCountDown);
+        self.textWinner.anchor.set(0.5);
 
-        if (music.name !== "dangerous" && playMusic) {
-            music.stop();
-            music = game.add.audio('dangerous');
-            music.loop = true;
-            music.play();
+        game.state.states.Game.settings = {numberOfPlayers: 0};
+    },
+
+    update: function() {
+        if(game.input.keyboard.addKey(Phaser.Keyboard.ONE).isDown) {
+            game.state.states.Game.settings.numberOfPlayers = 1;
+            game.state.start("Game");
+        } else if (game.input.keyboard.addKey(Phaser.Keyboard.TWO).isDown) {
+            game.state.states.Game.settings.numberOfPlayers = 2;
+            game.state.start("Game");
         }
-        game.stage.disableVisibilityChange = true;
-        game.add.sprite(0, 0, 'menu-bg');
-        game.add.existing(this.titleText);
-
-        this.addMenuOption('Start', function () {
-          game.state.start("Game");
-        });
-        this.addMenuOption('Options', function () {
-          game.state.start("Options");
-        });
-        this.addMenuOption('Credits', function () {
-          game.state.start("Credits");
-        });
-
-        // game.add.existing(this.startGame);
-        //
-        // game.input.keyboard.addKeys({
-        //     up: Phaser.Keyboard.UP,
-        //     down: Phaser.Keyboard.DOWN,
-        //     select: Phaser.Keyboard.CONTROL
-        // });
-
     }
 };
 

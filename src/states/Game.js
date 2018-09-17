@@ -48,6 +48,8 @@ Game.prototype = {
     create: function () {
         var self = this;
 
+        console.log(game.state.states.Game.settings.numberOfPlayers);
+
         /*Enable Phyics Engine*/
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.setImpactEvents(true);
@@ -246,7 +248,7 @@ Game.prototype = {
          * @param controls object with control actions
          */
         var updatePlayer = function(i, controls) {
-            console.log(`${self.enginePlaying[0]}`);
+            // console.log(`${self.enginePlaying[0]}`);
 
             /*Update Velocity*/
             if (self.velocity[i] > 9) {
@@ -396,7 +398,7 @@ Game.prototype = {
          * Call functions to update for each player
          */
          if(this.enableScoring){
-            updatePlayer(0, player1controls);
+             updatePlayer(0, player1controls);
             updatePlayer(1, player2controls);
             
         } else {
