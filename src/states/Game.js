@@ -4,6 +4,8 @@ Game.prototype = {
     preload: function () {
         this.isKeyboardInput = false;
 
+        this.humanPlayers = game.state.states.Game.settings.humanPlayers;
+
         this.optionCount = 1;
         this.playerCount = 2;
         this.cars = [];
@@ -47,8 +49,6 @@ Game.prototype = {
     },
     create: function () {
         var self = this;
-
-        console.log(game.state.states.Game.settings.numberOfPlayers);
 
         /*Enable Phyics Engine*/
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -178,13 +178,13 @@ Game.prototype = {
                 self.textCountDown2 = game.add.text(game.world.centerX, game.world.centerY, 'SET? 2', styleCountDown);
                 self.textCountDown2.anchor.set(0.5);
                 self.textCountDown3.destroy();
-            }, 1000)
+            }, 1000);
     
             setTimeout(function() {
                 self.textCountDown1 = game.add.text(game.world.centerX, game.world.centerY, 'GO! 1', styleCountDown);
                 self.textCountDown1.anchor.set(0.5);
                 self.textCountDown2.destroy();
-            }, 2000)
+            }, 2000);
     
             //start countdown animation
             setTimeout(function(){
@@ -210,200 +210,183 @@ Game.prototype = {
             },3000)
         }
     },
-    update: function () {
-    var self = this;
-        var soundStopped = function(sound) {
-            switch(sound) {
-                case self.soundEngine[0]:
-                    self.enginePlaying[0] = false;
-                    break;
-                case self.soundEngine[1]:
-                    self.enginePlaying[1] = false;
-                break;
-                case self.soundRev[0]:
-                    self.revPlaying[0] = false;
-                    break;
-                case self.soundRev[1]:
-                    self.revPlaying[1] = false;
-                break;
-                case self.soundSkid[0]:
-                    self.skidPlaying[0] = false;
-                break;
-                case self.soundSkid[1]:
-                    self.skidPlaying[1] = false;
-                break;
-            }
-        }
 
-        self.soundEngine[0].onStop.add(soundStopped, this);
-        self.soundEngine[1].onStop.add(soundStopped, this);
-        self.soundRev[0].onStop.add(soundStopped, this);
-        self.soundRev[1].onStop.add(soundStopped, this);
-        self.soundSkid[0].onStop.add(soundStopped, this);
-        self.soundSkid[1].onStop.add(soundStopped, this);
+    setInputs: function() {
+        var self = this;
 
-        /**
-         * Function to update player actions
-         * @param i index of player
-         * @param controls object with control actions
-         */
-        var updatePlayer = function(i, controls) {
-            // console.log(`${self.enginePlaying[0]}`);
+        var inputOne;
+        var inputTwo;
 
-            /*Update Velocity*/
-            if (self.velocity[i] > 9) {
-                // Forward Movement
-                if(!self.enginePlaying[i]) {
-                    self.enginePlaying[i] = true;
-                    self.soundEngine[i].play();
-                }
-                if (controls.up && self.velocity[i] <= 600) {
-                    // Accelerate
-                    self.velocity[i] += 9;
-                    if(!self.revPlaying[i]) {
-                        self.revPlaying[i] = true;
-                        self.soundRev[i].play();
-                    }
-                } else if (controls.down) {
-                    // Break
-                    self.velocity[i] -= 24;
-                    if(!self.skidPlaying[i]) {
-                        self.skidPlaying[i] = true;
-                        self.soundSkid[i].play();
-                    }
-                } else {
-                    // decelerate (friction)
-                    self.velocity[i] -= 6
-                }
-            } else if (self.velocity[i] < -9) {
-                // Backwards Movement
-                if(!self.enginePlaying[i]) {
-                    self.enginePlaying[i] = true;
-                    self.soundEngine[i].play();
-                }
-                if (controls.up) {
-                    // Break
-                    self.velocity[i] += 24;
-                    if(!self.skidPlaying[i]) {
-                        self.skidPlaying[i] = true;
-                        self.soundSkid[i].play();
-                    }
-                } else if (controls.down && self.velocity[i] >= -300) {
-                    // Accelerate
-                    self.velocity[i] -= 9;
-                    if(!self.revPlaying[i]) {
-                        self.revPlaying[i] = true;
-                        self.soundRev[i].play();
-                    }
-                } else {
-                    // decelerate (friction)
-                    self.velocity[i] += 6
-                }
-            } else {
-                if (controls.up) {
-                    // Accelerate
-                    self.velocity[i] += 9;
-                } else if (controls.down) {
-                    // Accelerate
-                    self.velocity[i] -= 9;
-                } else {
-                    self.velocity[i] = 0;
-                }
-            }
-
-            /*Set X and Y Speed of Velocity 1*/
-            self.cars[i].body.velocity.x = self.velocity[i] * Math.cos((self.cars[i].angle - 90) * 0.01745);
-            self.cars[i].body.velocity.y = self.velocity[i] * Math.sin((self.cars[i].angle - 90) * 0.01745);
-
-            /*Rotation of Car*/
-            if (controls.left) {
-                if (controls.eBrake) {
-                    self.cars[i].body.angularVelocity = -5 * (self.velocity[i] / 300);
-                } else {
-                    self.cars[i].body.angularVelocity = -5 * (self.velocity[i] / 600);
-                }
-            } else if (controls.right) {
-                if (controls.eBrake) {
-                    self.cars[i].body.angularVelocity = 5 * (self.velocity[i] / 300);
-                } else {
-                    self.cars[i].body.angularVelocity = 5 * (self.velocity[i] / 600);
-                }
-            } else {
-                self.cars[i].body.angularVelocity = 0;
-            }
-        };
-
-        var player1controls;
-        var player2controls;
-
-        if(this.isKeyboardInput) {
-            /**
-             * Player 1 controls
-             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
-             */
-            player1controls = {
+        if(self.isKeyboardInput) {
+            inputOne = {
+                "green": game.input.keyboard.addKey(Phaser.Keyboard.W).isDown,
+                "black": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
+                "left": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
+                "right": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
+                "white": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
+            };
+            inputTwo = {
+                "green": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
+                "black": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
+                "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
+                "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
+                "white": game.input.keyboard.addKey(Phaser.Keyboard.P).isDown
+            };
+        } else {
+            inputOne = {
                 "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
                 "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
                 "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
                 "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
-                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown
-            };
-            /**
-             * Player 2 controls
-             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
-             */
-            player2controls = {
-                "up": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
-                "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
-                "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
-                "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
-                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown
-            };
-        } else {
-            /**
-             * Player 1 controls
-             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
-             */
-            player1controls = {
-                "upUnused": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
-                "downUnused": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
-                "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
-                "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
-                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown,
-                "up": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown,
-                "down": game.input.keyboard.addKey(Phaser.Keyboard.ALT).isDown,
+                "white": game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).isDown,
+                "green": game.input.keyboard.addKey(Phaser.Keyboard.CONTROL).isDown,
+                "black": game.input.keyboard.addKey(Phaser.Keyboard.ALT).isDown,
                 "blue1": game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).isDown,
                 "blue2": game.input.keyboard.addKey(Phaser.Keyboard.P).isDown,
                 "blue3": game.input.keyboard.addKey(Phaser.Keyboard.Z).isDown,
             };
-            /**
-             * Player 2 controls
-             * @type {{up: boolean, down: boolean, left: boolean, right: boolean, eBrake: boolean}}
-             */
-            player2controls = {
-                "upUnused": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
-                "downUnused": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
+            inputTwo = {
+                "up": game.input.keyboard.addKey(Phaser.Keyboard.R).isDown,
+                "down": game.input.keyboard.addKey(Phaser.Keyboard.F).isDown,
                 "left": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
                 "right": game.input.keyboard.addKey(Phaser.Keyboard.G).isDown,
-                "eBrake": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown,
-                "up": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
-                "down": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
+                "white": game.input.keyboard.addKey(Phaser.Keyboard.Q).isDown,
+                "green": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
+                "black": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
                 "blue1": game.input.keyboard.addKey(Phaser.Keyboard.W).isDown,
                 "blue2": game.input.keyboard.addKey(Phaser.Keyboard.K).isDown,
                 "blue3": game.input.keyboard.addKey(Phaser.Keyboard.I).isDown
             };
         }
 
+        // Override with bot commands if number of human players is one
+        if(self.humanPlayers === 1) {
+            inputTwo = self.determineBotInput();
+        }
+        return [inputOne, inputTwo];
+    },
+    determineBotInput: function () {
+        var output = {
+            "up": false,
+            "down": false,
+            "left": true,
+            "right": false,
+            "white": false,
+            "green": true,
+            "black": false,
+            "blue1": false,
+            "blue2": false,
+            "blue3": false
+        };
+
+        return output;
+    },
+    /**
+     * Function to update player actions
+     * @param i index of player
+     * @param controls object with control actions
+     */
+    updatePlayer: function (i, controls) {
+        var self = this;
+
+        /*Update Velocity*/
+        if (self.velocity[i] > 9) {
+            // Forward Movement
+            if(!self.enginePlaying[i]) {
+                self.enginePlaying[i] = true;
+                self.soundEngine[i].play();
+            }
+            if (controls.green && self.velocity[i] <= 600) {
+                // Accelerate
+                self.velocity[i] += 9;
+                if(!self.revPlaying[i]) {
+                    self.revPlaying[i] = true;
+                    self.soundRev[i].play();
+                }
+            } else if (controls.black) {
+                // Break
+                self.velocity[i] -= 24;
+                if(!self.skidPlaying[i]) {
+                    self.skidPlaying[i] = true;
+                    self.soundSkid[i].play();
+                }
+            } else {
+                // decelerate (friction)
+                self.velocity[i] -= 6
+            }
+        } else if (self.velocity[i] < -9) {
+            // Backwards Movement
+            if(!self.enginePlaying[i]) {
+                self.enginePlaying[i] = true;
+                self.soundEngine[i].play();
+            }
+            if (controls.green) {
+                // Break
+                self.velocity[i] += 24;
+                if(!self.skidPlaying[i]) {
+                    self.skidPlaying[i] = true;
+                    self.soundSkid[i].play();
+                }
+            } else if (controls.black && self.velocity[i] >= -300) {
+                // Accelerate
+                self.velocity[i] -= 9;
+                if(!self.revPlaying[i]) {
+                    self.revPlaying[i] = true;
+                    self.soundRev[i].play();
+                }
+            } else {
+                // decelerate (friction)
+                self.velocity[i] += 6
+            }
+        } else {
+            if (controls.green) {
+                // Accelerate
+                self.velocity[i] += 9;
+            } else if (controls.black) {
+                // Accelerate
+                self.velocity[i] -= 9;
+            } else {
+                self.velocity[i] = 0;
+            }
+        }
+
+        /*Set X and Y Speed of Velocity 1*/
+        self.cars[i].body.velocity.x = self.velocity[i] * Math.cos((self.cars[i].angle - 90) * 0.01745);
+        self.cars[i].body.velocity.y = self.velocity[i] * Math.sin((self.cars[i].angle - 90) * 0.01745);
+
+        /*Rotation of Car*/
+        if (controls.left) {
+            if (controls.white) {
+                self.cars[i].body.angularVelocity = -5 * (self.velocity[i] / 300);
+            } else {
+                self.cars[i].body.angularVelocity = -5 * (self.velocity[i] / 600);
+            }
+        } else if (controls.right) {
+            if (controls.white) {
+                self.cars[i].body.angularVelocity = 5 * (self.velocity[i] / 300);
+            } else {
+                self.cars[i].body.angularVelocity = 5 * (self.velocity[i] / 600);
+            }
+        } else {
+            self.cars[i].body.angularVelocity = 0;
+        }
+    },
+    update: function () {
+    var self = this;
+        var inputs = self.setInputs();
+
+        var player1controls = inputs[0];
+        var player2controls = inputs[1];
+
         /**
          * Call functions to update for each player
          */
-         if(this.enableScoring){
-             updatePlayer(0, player1controls);
-            updatePlayer(1, player2controls);
-            
+         if(self.enableScoring){
+             self.updatePlayer(0, player1controls);
+             self.updatePlayer(1, player2controls);
         } else {
             self.velocity[0] = 0;
             self.velocity[1] = 0;
-        };
+        }
     },
 };

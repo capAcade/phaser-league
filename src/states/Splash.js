@@ -71,12 +71,6 @@ Splash.prototype = {
     this.addGameStates();
     this.addGameMusic();
 
-    // For loading the game menu
-    // setTimeout(function () {
     game.state.start("GameMenu");
-    // }, 1000);
-
-    // for directly starting the game
-    // game.state.start("Game");
   }
 };
