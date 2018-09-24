@@ -266,18 +266,48 @@ Game.prototype = {
         return [inputOne, inputTwo];
     },
     determineBotInput: function () {
+        var self = this;
+
         var output = {
             "up": false,
             "down": false,
-            "left": true,
+            "left": false,
             "right": false,
             "white": false,
-            "green": true,
-            "black": false,
+            "green": true, //accelerate
+            "black": false, //brake/reverse
             "blue1": false,
             "blue2": false,
             "blue3": false
         };
+
+        // console.log(`Ball: ${self.ball.x} ${self.ball.y}`);
+        // console.log(`CAR2: ${self.cars[1].x} ${self.cars[1].y} ${self.cars[1].angle}`);
+
+        // console.log(`diff: ${self.ball.x - self.cars[1].x} ${self.ball.y - self.cars[1].y}`);
+
+        // console.log(`${self.cars[0].angle}`);
+        var diffX = self.ball.x - self.cars[1].x;
+        var diffY = self.ball.y - self.cars[1].y;
+        var ballLocationAngle;
+        ballLocationAngle = Math.atan(Math.abs(diffX) / Math.abs(diffY)) * (180 / Math.PI);
+        // get correct angle for ball below car
+        if(diffY > 0) ballLocationAngle = 180 - ballLocationAngle;
+        // get correct angle for ball left of car
+        if(diffX < 0) ballLocationAngle *= -1;
+
+        var diffAngle = ballLocationAngle - self.cars[1].angle;
+
+        // console.log(diffAngle);
+        if(diffAngle < 180 && diffAngle > 0) {
+            // go right
+            output.right = true;
+            output.left = false;
+        } else {
+            // go left
+            output.right = false;
+            output.left = true;
+        }
 
         return output;
     },
