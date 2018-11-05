@@ -281,35 +281,89 @@ Game.prototype = {
             "blue3": false
         };
 
-        // console.log(`Ball: ${self.ball.x} ${self.ball.y}`);
-        // console.log(`CAR2: ${self.cars[1].x} ${self.cars[1].y} ${self.cars[1].angle}`);
-
-        // console.log(`diff: ${self.ball.x - self.cars[1].x} ${self.ball.y - self.cars[1].y}`);
-
-        // console.log(`${self.cars[0].angle}`);
+        // set ball location and angle relative from cars[1]
         var diffX = self.ball.x - self.cars[1].x;
         var diffY = self.ball.y - self.cars[1].y;
-        var ballLocationAngle;
-        ballLocationAngle = Math.atan(Math.abs(diffX) / Math.abs(diffY)) * (180 / Math.PI);
+        var ballLocationAngle = Math.atan(Math.abs(diffX) / Math.abs(diffY)) * (180 / Math.PI);
         // get correct angle for ball below car
         if(diffY > 0) ballLocationAngle = 180 - ballLocationAngle;
         // get correct angle for ball left of car
         if(diffX < 0) ballLocationAngle *= -1;
-
         var diffAngle = ballLocationAngle - self.cars[1].angle;
-
-        // console.log(diffAngle);
-        if(diffAngle < 180 && diffAngle > 0) {
-            // go right
-            output.right = true;
-            output.left = false;
-        } else {
-            // go left
-            output.right = false;
-            output.left = true;
+        
+        // Set goal location and angle relative from cars[1]
+        var goalDiffX = 1200 - self.cars[1].x;
+        var goalDiffY = 512 - self.cars[1].y;
+        var goalLocationAngle = Math.atan(Math.abs(goalDiffX) / Math.abs(goalDiffY)) * (180 / Math.PI);
+        if(goalDiffY > 0) goalLocationAngle = 180 - goalLocationAngle;
+        // get correct angle for ball left of car
+        if(goalDiffX < 0) goalLocationAngle *= -1;
+        var goalDiffAngle = goalLocationAngle - self.cars[1].angle;
+        
+        if (self.cars[1].x > 900) { // if car is close to own wall
+            if (self.cars[1].angle > 0 && self.cars[1].angle < 90 || self.cars[1].angle < 0 && self.cars[1].angle > -90) {
+                output.right = false;
+                output.left = true;
+            } else {
+                output.right = true;
+                output.left = false;
+            }
+        } else if (self.checkIfBallBetweenCarAndGoal()) { // if ball located between car and goal
+            if (diffAngle < 180 && diffAngle > 0) {
+                // go right
+                output.right = true;
+                output.left = false;
+            } else {
+                // go left
+                output.right = false;
+                output.left = true;
+            }
+        } else { // else drive back to goal
+            if (self.cars[1].x > 1000) {
+                output.green = false;
+            } else if (self.cars[1].stuck && self.cars[1].stuck.count > 10) {
+                output.green = false;
+                output.black = true;
+            } else if (goalDiffAngle < 180 && goalDiffAngle > 0) {
+                // go right
+                output.right = true;
+                output.left = false;
+            } else {
+                // go left
+                output.right = false;
+                output.left = true;
+            }
         }
 
         return output;
+    },
+    checkIfBallBetweenCarAndGoal: function () {
+        var self = this;
+
+        // Goal location data
+        var goalTopX = 80;
+        var goalTopY = 312;
+        var goalBottomX = 80;
+        var goalBottomY = 712;
+
+        var line1 = self.getLineFunction(goalTopX, goalTopY, self.ball.x, self.ball.y);
+        var line2 = self.getLineFunction(goalBottomX, goalBottomY, self.ball.x, self.ball.y);
+
+        var line1Y = line1.a * self.cars[1].x + line1.b;
+        var line2Y = line2.a * self.cars[1].x + line2.b;
+
+        // line1Y < line2Y, so car > line2Y && car < line1Y
+        if (self.cars[1].y < line1Y && self.cars[1].y > line2Y) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    getLineFunction: function(x1, y1, x2, y2) {
+        // y = a * x + b
+        var a = (y2 - y1) / (x2 - x1);
+        var b = y1 - (a * x1);
+        return {a, b};
     },
     /**
      * Function to update player actions
