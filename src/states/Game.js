@@ -115,7 +115,8 @@ Game.prototype = {
 
         //Set Collision
         self.cars[0].body.collides([car2CollisionGroup, ballCollisionGroup,wallsCG]);
-        self.cars[1].body.collides([car1CollisionGroup, ballCollisionGroup,wallsCG]);
+        self.cars[1].body.collides([car1CollisionGroup, ballCollisionGroup]);
+        self.cars[1].body.collides([wallsCG],self.handleCarWallColliusion, this); // if car 2 hits wall
         self.ball.body.collides([car1CollisionGroup, car2CollisionGroup, wallsCG]);
         self.ball.body.collides([Goal1CG],self.handleGoal1, this);
         self.ball.body.collides([Goal2CG],self.handleGoal2, this);
@@ -128,10 +129,15 @@ Game.prototype = {
         self.textScore1.anchor.set(0.5);
         self.textScore2.anchor.set(0.5);
 
-        // Add Sounds
-        self.soundEngine = [game.add.audio('engine1'), game.add.audio('engine2')];
-        self.soundRev = [game.add.audio('rev1'), game.add.audio('rev2')]
-        self.soundSkid = [game.add.audio('skid1'), game.add.audio('skid2')]
+        // // Add Sounds
+        // self.soundEngine = [game.add.audio('engine1'), game.add.audio('engine2')];
+        // self.soundRev = [game.add.audio('rev1'), game.add.audio('rev2')]
+        // self.soundSkid = [game.add.audio('skid1'), game.add.audio('skid2')]
+    },
+    handleCarWallColliusion: function () {
+        var self = this;
+        self.cars[1].hitWall = true;
+        self.cars[1].stuckCount = 0;
     },
     handleGoal1: function () {
         var self = this;
@@ -291,16 +297,42 @@ Game.prototype = {
         if(diffX < 0) ballLocationAngle *= -1;
         var diffAngle = ballLocationAngle - self.cars[1].angle;
         
+        var ballDirectionAngle = Math.atan(Math.abs(self.ball.body.velocity.x) / Math.abs(self.ball.body.velocity.y)) * (180 / Math.PI);
+        // get correct angle for ball below car
+        if(self.ball.body.velocity.x > 0) ballDirectionAngle = 180 - ballDirectionAngle;
+        // get correct angle for ball left of car
+        if(self.ball.body.velocity.y < 0) ballDirectionAngle *= -1;
+
         // Set goal location and angle relative from cars[1]
         var goalDiffX = 1200 - self.cars[1].x;
-        var goalDiffY = 512 - self.cars[1].y;
+        var goalDiffY = 400 - self.cars[1].y;
         var goalLocationAngle = Math.atan(Math.abs(goalDiffX) / Math.abs(goalDiffY)) * (180 / Math.PI);
         if(goalDiffY > 0) goalLocationAngle = 180 - goalLocationAngle;
         // get correct angle for ball left of car
         if(goalDiffX < 0) goalLocationAngle *= -1;
         var goalDiffAngle = goalLocationAngle - self.cars[1].angle;
-        
-        if (self.cars[1].x > 900) { // if car is close to own wall
+
+        if (self.cars[1].hitWall) { // when car is stuck, car contact with body
+            self.cars[1].stuckCount ++;
+
+            output.green = false;
+            output.black = true;
+
+            // if max repeat reached, reset
+            if (self.cars[1].stuckCount > 60) {
+                self.cars[1].hitWall = false;
+            }
+        } else if (self.ball.x > 800) { // ball close to own goal   
+            if (diffAngle < 180 && diffAngle > 0) {
+                // go right
+                output.right = true;
+                output.left = false;
+            } else {
+                // go left
+                output.right = false;
+                output.left = true;
+            }
+        } else if (self.cars[1].x > 1000) { // if car is close to own wall
             if (self.cars[1].angle > 0 && self.cars[1].angle < 90 || self.cars[1].angle < 0 && self.cars[1].angle > -90) {
                 output.right = false;
                 output.left = true;
@@ -319,12 +351,7 @@ Game.prototype = {
                 output.left = true;
             }
         } else { // else drive back to goal
-            if (self.cars[1].x > 1000) {
-                output.green = false;
-            } else if (self.cars[1].stuck && self.cars[1].stuck.count > 10) {
-                output.green = false;
-                output.black = true;
-            } else if (goalDiffAngle < 180 && goalDiffAngle > 0) {
+            if (goalDiffAngle < 180 && goalDiffAngle > 0) {
                 // go right
                 output.right = true;
                 output.left = false;
@@ -359,7 +386,7 @@ Game.prototype = {
             return false;
         }
     },
-    getLineFunction: function(x1, y1, x2, y2) {
+    getLineFunction: function (x1, y1, x2, y2) {
         // y = a * x + b
         var a = (y2 - y1) / (x2 - x1);
         var b = y1 - (a * x1);
@@ -376,48 +403,24 @@ Game.prototype = {
         /*Update Velocity*/
         if (self.velocity[i] > 9) {
             // Forward Movement
-            if(!self.enginePlaying[i]) {
-                self.enginePlaying[i] = true;
-                self.soundEngine[i].play();
-            }
             if (controls.green && self.velocity[i] <= 600) {
                 // Accelerate
                 self.velocity[i] += 9;
-                if(!self.revPlaying[i]) {
-                    self.revPlaying[i] = true;
-                    self.soundRev[i].play();
-                }
             } else if (controls.black) {
                 // Break
                 self.velocity[i] -= 24;
-                if(!self.skidPlaying[i]) {
-                    self.skidPlaying[i] = true;
-                    self.soundSkid[i].play();
-                }
             } else {
                 // decelerate (friction)
                 self.velocity[i] -= 6
             }
         } else if (self.velocity[i] < -9) {
             // Backwards Movement
-            if(!self.enginePlaying[i]) {
-                self.enginePlaying[i] = true;
-                self.soundEngine[i].play();
-            }
             if (controls.green) {
                 // Break
                 self.velocity[i] += 24;
-                if(!self.skidPlaying[i]) {
-                    self.skidPlaying[i] = true;
-                    self.soundSkid[i].play();
-                }
             } else if (controls.black && self.velocity[i] >= -300) {
                 // Accelerate
                 self.velocity[i] -= 9;
-                if(!self.revPlaying[i]) {
-                    self.revPlaying[i] = true;
-                    self.soundRev[i].play();
-                }
             } else {
                 // decelerate (friction)
                 self.velocity[i] += 6
