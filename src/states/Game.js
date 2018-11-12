@@ -129,10 +129,10 @@ Game.prototype = {
         self.textScore1.anchor.set(0.5);
         self.textScore2.anchor.set(0.5);
 
-        // // Add Sounds
-        // self.soundEngine = [game.add.audio('engine1'), game.add.audio('engine2')];
-        // self.soundRev = [game.add.audio('rev1'), game.add.audio('rev2')]
-        // self.soundSkid = [game.add.audio('skid1'), game.add.audio('skid2')]
+        // Add Sounds
+        self.soundEngine = [game.add.audio('engine1'), game.add.audio('engine2')];
+        self.soundRev = [game.add.audio('rev1'), game.add.audio('rev2')]
+        self.soundSkid = [game.add.audio('skid1'), game.add.audio('skid2')]
     },
     handleCarWallColliusion: function () {
         var self = this;
