@@ -305,7 +305,7 @@ Game.prototype = {
 
         // Set goal location and angle relative from cars[1]
         var goalDiffX = 1200 - self.cars[1].x;
-        var goalDiffY = 400 - self.cars[1].y;
+        var goalDiffY = 512 - self.cars[1].y;
         var goalLocationAngle = Math.atan(Math.abs(goalDiffX) / Math.abs(goalDiffY)) * (180 / Math.PI);
         if(goalDiffY > 0) goalLocationAngle = 180 - goalLocationAngle;
         // get correct angle for ball left of car
