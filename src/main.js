@@ -25,12 +25,6 @@ Main.prototype = {
         game.load.tilemap('map', 'assets/phaserleague_tiledmap_arena1_neon.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.physics("sprite_physics", "assets/collision/sprite_physics.json");
         game.load.image('tiles', 'assets/set_neon.gif');
-        game.load.audio('engine1','assets/sound/Engine1Loop.wav');
-        game.load.audio('engine2','assets/sound/Engine2Loop.wav');
-        game.load.audio('rev1','assets/sound/Rev1.wav');
-        game.load.audio('rev2','assets/sound/Rev2.wav');
-        game.load.audio('skid1','assets/sound/Skid1.wav');
-        game.load.audio('skid2','assets/sound/Skid2.wav');
     },
 
     create: function () {
