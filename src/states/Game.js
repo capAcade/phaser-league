@@ -2,7 +2,7 @@ var Game = function (game) {};
 
 Game.prototype = {
     preload: function () {
-        this.isKeyboardInput = true;
+        this.isKeyboardInput = false;
 
         this.humanPlayers = game.state.states.Game.settings.humanPlayers;
 
@@ -174,7 +174,7 @@ Game.prototype = {
             
             setTimeout(function() {
                 window.history.back();
-            }, 3000);
+            }, 5000);
         } else {
             self.textCountDownMessage = game.add.text(game.world.centerX, game.world.centerY - 50, 'Player ' + self.scoredPlayer + ' scored!', styleCountDown);
             self.textCountDownMessage.anchor.set(0.5);
