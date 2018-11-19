@@ -1,0 +1,12 @@
+{ "columns":11,
+ "image":"set_capreal.gif",
+ "imageheight":48,
+ "imagewidth":176,
+ "margin":0,
+ "name":"phaserleague_tileset_capreal",
+ "spacing":0,
+ "tilecount":33,
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset"
+}

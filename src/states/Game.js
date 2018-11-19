@@ -2,7 +2,7 @@ var Game = function (game) {};
 
 Game.prototype = {
     preload: function () {
-        this.isKeyboardInput = false;
+        this.isKeyboardInput = true;
 
         this.humanPlayers = game.state.states.Game.settings.humanPlayers;
 
@@ -73,6 +73,7 @@ Game.prototype = {
         self.ball = game.add.sprite(640, 512, 'ball');
         game.physics.p2.enable(self.ball);
         //elf.ball.body.loadPolygon("sprite_physics", 'ball');
+        self.ball.body.setCircle(24);
         self.ball.body.collideWorldBounds = true;
 
         /*Create Collision Groups*/
