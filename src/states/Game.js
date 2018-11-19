@@ -123,8 +123,8 @@ Game.prototype = {
         self.ball.body.collides([Goal2CG],self.handleGoal2, this);
 
         // render score
-        var style1 = { font: "42px Arial", fill: "#0000ff", align: "center" };
-        var style2 = { font: "42px Arial", fill: "#ff0000", align: "center" };
+        var style1 = { font: "42px Arial", fill: "#95e616", align: "center" };
+        var style2 = { font: "42px Arial", fill: "#ff304c", align: "center" };
         self.textScore1 = game.add.text(game.world.centerX - 50, 50, self.score[0], style1);
         self.textScore2 = game.add.text(game.world.centerX + 50, 50, self.score[1], style2);
         self.textScore1.anchor.set(0.5);
@@ -166,7 +166,7 @@ Game.prototype = {
     },
     resetPosition: function() {
         var self = this;
-        var styleCountDown = { font: "42px Arial", fill: "#ff00ff", align: "center" };
+        var styleCountDown = { font: "42px Arial", fill: "#ffffff", align: "center" };
 
         if(self.score[0] >= self.maxScore - 1|| self.score[1] >= self.maxScore - 1) {
             self.textWinner = game.add.text(game.world.centerX, game.world.centerY - 50, 'A WINNER IS YOU', styleCountDown);
