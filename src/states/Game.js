@@ -56,7 +56,7 @@ Game.prototype = {
 
         /*Adding Map*/
         self.map = game.add.tilemap('map');
-        self.map.addTilesetImage('phaserleague_tileset_neon', 'tiles');
+        self.map.addTilesetImage('phaserleague_tileset_capreal', 'tiles');
         self.layer = self.map.createLayer('Arena1');
         self.layer.resizeWorld();
 

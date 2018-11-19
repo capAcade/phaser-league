@@ -22,9 +22,9 @@ Main.prototype = {
         game.load.spritesheet('car2', 'assets/images/car2.png');
         game.load.spritesheet('ball', 'assets/images/ball.png');
         game.load.physics("collision", "assets/collision/collision.json");
-        game.load.tilemap('map', 'assets/phaserleague_tiledmap_arena1_neon.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('map', 'assets/phaserleague_tiledmap_arena1_capreal.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.physics("sprite_physics", "assets/collision/sprite_physics.json");
-        game.load.image('tiles', 'assets/set_neon.gif');
+        game.load.image('tiles', 'assets/set_capreal.gif');
     },
 
     create: function () {
