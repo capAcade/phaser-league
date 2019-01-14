@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/capAcade/phaser-racer.git"
+    "url": "git+https://github.com/capAcade/phaser-league.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Bart Altena & Eduard Wu",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/capAcade/phaser-racer/issues"
+    "url": "https://github.com/capAcade/phaser-league/issues"
   },
-  "homepage": "https://github.com/capAcade/phaser-racer#readme",
+  "homepage": "https://github.com/capAcade/phaser-league#readme",
   "dependencies": {
     "express": "^4.16.3"
   }

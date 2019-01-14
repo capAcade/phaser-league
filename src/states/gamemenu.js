@@ -3,7 +3,7 @@ var GameMenu = function () {};
 GameMenu.prototype = {
 
     create: function () {
-        var styleText = { font: "42px Arial", fill: "#ff0000", align: "center" };
+        var styleText = { font: "42px Arial", fill: "#ffffff", align: "center" };
         self.textPlayerSelect1 = game.add.text(game.world.centerX, game.world.centerY - 50, 'Select number of players', styleText);
         self.textPlayerSelect2 = game.add.text(game.world.centerX, game.world.centerY + 50, 'One player or two player', styleText);
         self.textPlayerSelect1.anchor.set(0.5);
