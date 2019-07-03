@@ -13,10 +13,10 @@ GameMenu.prototype = {
     },
 
     update: function() {
-        if(game.input.keyboard.addKey(Phaser.Keyboard.ONE).isDown) {
+        if(game.input.keyboard.addKey(Phaser.Keyboard.N).isDown) {
             game.state.states.Game.settings.humanPlayers = 1;
             game.state.start("Game");
-        } else if (game.input.keyboard.addKey(Phaser.Keyboard.TWO).isDown) {
+        } else if (game.input.keyboard.addKey(Phaser.Keyboard.M).isDown) {
             game.state.states.Game.settings.humanPlayers = 2;
             game.state.start("Game");
         }
