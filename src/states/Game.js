@@ -239,7 +239,8 @@ Game.prototype = {
             "blue1": game.input.keyboard.addKey(Phaser.Keyboard.K).isDown,
             "blue2": game.input.keyboard.addKey(Phaser.Keyboard.O).isDown,
             "blue3": game.input.keyboard.addKey(Phaser.Keyboard.L).isDown,
-            "side": game.input.keyboard.addKey(Phaser.Keyboard.Z).isDown
+            "side": game.input.keyboard.addKey(Phaser.Keyboard.Z).isDown,
+            "player1": game.input.keyboard.addKey(Phaser.Keyboard.N).isDown,
         };
         var inputTwo = {
             "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
@@ -252,7 +253,8 @@ Game.prototype = {
             "blue1": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_5).isDown,
             "blue2": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_9).isDown,
             "blue3": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_6).isDown,
-            "side": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3).isDown
+            "side": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3).isDown,
+            "player2": game.input.keyboard.addKey(Phaser.Keyboard.M).isDown,
         };
 
         // Override with bot commands if number of human players is one
@@ -468,6 +470,10 @@ Game.prototype = {
     update: function () {
         var self = this;
         var inputs = self.setInputs();
+        
+        if(game.input.keyboard.addKey(Phaser.Keyboard.N).isDown && game.input.keyboard.addKey(Phaser.Keyboard.M).isDown) {
+            window.history.back();
+        }
 
         var player1controls = inputs[0];
         var player2controls = inputs[1];
