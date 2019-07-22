@@ -6,11 +6,11 @@ Splash.prototype = {
     game.load.script('style', 'lib/style.js');
     game.load.script('mixins', 'lib/mixins.js');
     game.load.script('WebFont', 'vendor/webfontloader.js');
-    game.load.script('gamemenu','states/GameMenu.js');
-    game.load.script('game', 'states/Game.js');
-    game.load.script('gameover','states/GameOver.js');
-    game.load.script('credits', 'states/Credits.js');
-    game.load.script('options', 'states/Options.js');
+    game.load.script('gamemenu','states/game-menu.js');
+    game.load.script('game', 'states/game.js');
+    game.load.script('gameover','states/game-over.js');
+    game.load.script('credits', 'states/credits.js');
+    game.load.script('options', 'states/options.js');
   },
 
   loadBgm: function () {
