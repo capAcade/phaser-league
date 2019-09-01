@@ -228,33 +228,67 @@ Game.prototype = {
     setInputs: function () {
         var self = this;
 
+        var keyst = JSON.parse(localStorage.getItem("capManKeys"));
+        if(keyst === null) {
+            keyst = {
+                playerOne: {
+                    up: Phaser.Keyboard.W,
+                    down: Phaser.Keyboard.S,
+                    left: Phaser.Keyboard.A,
+                    right: Phaser.Keyboard.D,
+                    green: Phaser.Keyboard.J,
+                    black: Phaser.Keyboard.I,
+                    white: Phaser.Keyboard.U,
+                    blueBelowWhite: Phaser.Keyboard.K,
+                    topRightBlue: Phaser.Keyboard.O,
+                    buttomRightBlue: Phaser.Keyboard.L
+                },
+                playerTwo: {
+                    up: Phaser.Keyboard.UP,
+                    down: Phaser.Keyboard.DOWN,
+                    left: Phaser.Keyboard.LEFT,
+                    right: Phaser.Keyboard.RIGHT,
+                    green: Phaser.Keyboard.NUMPAD_4,
+                    black: Phaser.Keyboard.NUMPAD_8,
+                    white: Phaser.Keyboard.NUMPAD_7,
+                    blueBelowWhite: Phaser.Keyboard.NUMPAD_5,
+                    topRightBlue: Phaser.Keyboard.NUMPAD_9,
+                    buttomRightBlue: Phaser.Keyboard.NUMPAD_6
+                },
+                pinBallLeft: Phaser.Keyboard.Z,
+                pinBallRight: Phaser.Keyboard.NUMPAD_3,
+                OnePlayerSelection: Phaser.Keyboard.N,
+                TwoPlayerSelection: Phaser.Keyboard.M
+            }
+        }
+
         var inputOne = {
-            "up": game.input.keyboard.addKey(Phaser.Keyboard.W).isDown,
-            "down": game.input.keyboard.addKey(Phaser.Keyboard.S).isDown,
-            "left": game.input.keyboard.addKey(Phaser.Keyboard.A).isDown,
-            "right": game.input.keyboard.addKey(Phaser.Keyboard.D).isDown,
-            "white": game.input.keyboard.addKey(Phaser.Keyboard.U).isDown,
-            "green": game.input.keyboard.addKey(Phaser.Keyboard.J).isDown,
-            "black": game.input.keyboard.addKey(Phaser.Keyboard.I).isDown,
-            "blue1": game.input.keyboard.addKey(Phaser.Keyboard.K).isDown,
-            "blue2": game.input.keyboard.addKey(Phaser.Keyboard.O).isDown,
-            "blue3": game.input.keyboard.addKey(Phaser.Keyboard.L).isDown,
-            "side": game.input.keyboard.addKey(Phaser.Keyboard.Z).isDown,
-            "player1": game.input.keyboard.addKey(Phaser.Keyboard.N).isDown,
+            "up": game.input.keyboard.addKey(keyst.playerOne.up).isDown,
+            "down": game.input.keyboard.addKey(keyst.playerOne.down).isDown,
+            "left": game.input.keyboard.addKey(keyst.playerOne.left).isDown,
+            "right": game.input.keyboard.addKey(keyst.playerOne.right).isDown,
+            "white": game.input.keyboard.addKey(keyst.playerOne.white).isDown,
+            "green": game.input.keyboard.addKey(keyst.playerOne.green).isDown,
+            "black": game.input.keyboard.addKey(keyst.playerOne.black).isDown,
+            "blue1": game.input.keyboard.addKey(keyst.playerOne.blueBelowWhite).isDown,
+            "blue2": game.input.keyboard.addKey(keyst.playerOne.topRightBlue).isDown,
+            "blue3": game.input.keyboard.addKey(keyst.playerOne.buttomRightBlue).isDown,
+            "side": game.input.keyboard.addKey(keyst.pinBallLeft).isDown,
+            "player1": game.input.keyboard.addKey(keyst.OnePlayerSelection).isDown,
         };
         var inputTwo = {
-            "up": game.input.keyboard.addKey(Phaser.Keyboard.UP).isDown,
-            "down": game.input.keyboard.addKey(Phaser.Keyboard.DOWN).isDown,
-            "left": game.input.keyboard.addKey(Phaser.Keyboard.LEFT).isDown,
-            "right": game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).isDown,
-            "white": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_7).isDown,
-            "green": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_4).isDown,
-            "black": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_8).isDown,
-            "blue1": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_5).isDown,
-            "blue2": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_9).isDown,
-            "blue3": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_6).isDown,
-            "side": game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3).isDown,
-            "player2": game.input.keyboard.addKey(Phaser.Keyboard.M).isDown,
+            "up": game.input.keyboard.addKey(keyst.playerTwo.up).isDown,
+            "down": game.input.keyboard.addKey(keyst.playerTwo.down).isDown,
+            "left": game.input.keyboard.addKey(keyst.playerTwo.left).isDown,
+            "right": game.input.keyboard.addKey(keyst.playerTwo.right).isDown,
+            "white": game.input.keyboard.addKey(keyst.playerTwo.white).isDown,
+            "green": game.input.keyboard.addKey(keyst.playerTwo.green).isDown,
+            "black": game.input.keyboard.addKey(keyst.playerTwo.black).isDown,
+            "blue1": game.input.keyboard.addKey(keyst.playerTwo.blueBelowWhite).isDown,
+            "blue2": game.input.keyboard.addKey(keyst.playerTwo.topRightBlue).isDown,
+            "blue3": game.input.keyboard.addKey(keyst.playerTwo.buttomRightBlue).isDown,
+            "side": game.input.keyboard.addKey(keyst.pinBallRight).isDown,
+            "player2": game.input.keyboard.addKey(keyst.TwoPlayerSelection).isDown,
         };
 
         // Override with bot commands if number of human players is one
@@ -470,8 +504,9 @@ Game.prototype = {
     update: function () {
         var self = this;
         var inputs = self.setInputs();
+        console.log(inputs[0].player1, inputs[1].player2)
         
-        if(game.input.keyboard.addKey(Phaser.Keyboard.N).isDown && game.input.keyboard.addKey(Phaser.Keyboard.M).isDown) {
+        if(inputs[0].player1 && inputs[1].player2) {
             window.history.back();
         }
 
